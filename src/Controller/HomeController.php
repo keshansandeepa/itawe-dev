@@ -4,7 +4,11 @@
 namespace App\Controller;
 
 
+use App\DataFixtures\BookFixtures;
+use App\DataFixtures\CategoryFixtures;
 use App\Entity\Book;
+use App\Repository\AuthorRepository;
+use App\Repository\BookRepository;
 use App\Service\Money;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,16 +19,10 @@ class HomeController extends AbstractController
 {
 
 
-    public function index(EntityManagerInterface $entityManager)
+    public function index(AuthorRepository $authorRepository)
     {
+        dd($authorRepository->findBySlug('heather-avis'));
 
-        $repository = $entityManager->getRepository(Book::class);
-        $book = $repository->findByIsbn("979-8669081621");
-
-        dd($book);
-
-
-        return $this->json((new Money(600))->formatted());
     }
 
 }

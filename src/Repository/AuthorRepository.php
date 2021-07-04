@@ -19,6 +19,17 @@ class AuthorRepository extends ServiceEntityRepository
         parent::__construct($registry, Author::class);
     }
 
+    public function findBySlug($slug)
+    {
+
+        return $this->createQueryBuilder('authorSlug')
+        ->andWhere('authorSlug.slug = :slug')
+        ->setParameter('slug', $slug)
+        ->getQuery()
+        ->getOneOrNullResult();
+
+    }
+
     // /**
     //  * @return Author[] Returns an array of Author objects
     //  */

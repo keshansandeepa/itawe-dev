@@ -23,10 +23,6 @@ class Author
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
-    private $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -57,19 +53,6 @@ class Author
     {
         return $this->id;
     }
-
-    public function getUuid(): ?string
-    {
-        return $this->uuid;
-    }
-
-    public function setUuid(?string $uuid): self
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;

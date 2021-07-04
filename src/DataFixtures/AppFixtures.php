@@ -15,9 +15,9 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
 
-       BookFactory::new()->createMany(20);
 
-       $manager->flush();
 
     }
+
+
 }
