@@ -7,10 +7,12 @@ use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass=AuthorRepository::class)
+ * @Table(name="authors")
  */
 class Author
 {
