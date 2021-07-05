@@ -8,15 +8,18 @@ use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class BookController extends BaseApiController
 {
 
     private BookRepository $bookRepository;
+    private SerializerInterface $serializer;
 
-    public function __construct(BookRepository $bookRepository)
+    public function __construct(BookRepository $bookRepository,SerializerInterface $serializer)
     {
         $this->bookRepository  =$bookRepository;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -24,7 +27,15 @@ class BookController extends BaseApiController
      */
     public function index()
     {
-        return new Response("test",200);
+        $book = $this->bookRepository->findAll();
+        $this->serializer->serialize($book, 'json',[
+            'groups' => 'show_book'
+        ]);
+        return new Response(
+            $this->serializer->serialize($book, 'json',['groups' => 'show_book']),
+            Response::HTTP_OK,
+            ['Content-type' => 'application/json']
+        );
     }
 
     /**
@@ -38,12 +49,19 @@ class BookController extends BaseApiController
         if (empty($book)){
             return $this->notFoundJsonResponse('Book');
         }
-        return $this->json([
-           'id' => $book->getId(),
-           'title' => $book->getTitle(),
-           'slug' => $book->getSlug(),
-           'description' => $book->getDescription(),
-        ],200);
+
+        $this->serializer->serialize($book, 'json',[
+            'groups' => 'show_book'
+        ]);
+
+        return new Response(
+            $this->serializer->serialize($book, 'json',['groups' => 'show_book','list_category']),
+            Response::HTTP_OK,
+            ['Content-type' => 'application/json']
+        );
+
+
+
     }
 
 }

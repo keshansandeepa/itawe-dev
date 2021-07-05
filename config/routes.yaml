@@ -6,9 +6,3 @@ app_login:
     path: /api/login
     controller : App\Controller\Auth\LoginController:login
     methods: POST
-
-books_index:
-    path: /api/books
-    controller: App\Controller\Api\BookController:index
-    methods: GET
-

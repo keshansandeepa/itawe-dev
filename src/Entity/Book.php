@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BookRepository;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 /**
  *
  * @ORM\Entity(repositoryClass=BookRepository::class)
@@ -26,40 +24,49 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"book_resource:read"})
+     * @Groups({"show_book", "list_book"})
      */
     private $id;
 
     /**
+     * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="string", length="255", unique=true)
      *
      */
     private $isbn;
 
     /**
+     * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text")
      *
      */
     private $title;
 
     /**
+     * @Groups({"show_book", "list_book"})
      * @ORM\Column (type="string", length="255", unique=true,nullable=true)
      *
      */
     private $slug;
 
     /**
+     * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text", nullable=true)
      *
      */
     private $description;
 
     /**
+     *
      * @ORM\Column(type="datetime", name="publication_date")
      *
      */
     private $publicationDate;
 
+    /**
+     * @Groups({"show_book", "list_book"})
+     *
+     */
     private $publicationDateFormatted;
 
     /**
@@ -82,13 +89,13 @@ class Book
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     *
+     * @Groups({"show_book"})
      */
     private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
-     *
+     * @Groups({"show_book"})
      */
     private $authors;
 
