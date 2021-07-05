@@ -14,19 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={"get"},
- *     normalizationContext={"groups" = "book_resource:read"},
- *     attributes={
- *     "pagination_items_per_page"=10
- *     }
  *
- * ),
- *
- * @ApiFilter(SearchFilter::class, properties={
-        "categories.id":"partial"
- *     })
  * @ORM\Entity(repositoryClass=BookRepository::class)
  * @Table(name="books")
  */
@@ -44,25 +32,25 @@ class Book
 
     /**
      * @ORM\Column(type="string", length="255", unique=true)
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $title;
 
     /**
      * @ORM\Column (type="string", length="255", unique=true,nullable=true)
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $description;
 
@@ -72,39 +60,35 @@ class Book
      */
     private $publicationDate;
 
-    /**
-     *
-     * @Groups ({"book_resource:read"})
-     */
     private $publicationDateFormatted;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $desktopCoverImage;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="mobile_cover_image")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $mobileCoverImage;
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $price;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $authors;
 

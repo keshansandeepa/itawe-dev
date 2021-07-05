@@ -11,12 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
- *      collectionOperations={"post","get"},
- *     itemOperations={"get"},
- *     normalizationContext={"groups"={"user:read"}},
- *     denormalizationContext={"groups"={"user:write"}},
- * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Table(name="users")
  *

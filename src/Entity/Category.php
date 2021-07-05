@@ -14,8 +14,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource(
- *     collectionOperations={"get","post"},
- *     itemOperations={"get","put"},
+ *     collectionOperations={},
+ *     itemOperations={},
  *     normalizationContext={"groups" = "category_resource:read"},
  *     attributes={
             "pagination_items_per_page" =10

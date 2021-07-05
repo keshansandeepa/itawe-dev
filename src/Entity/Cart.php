@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=CartRepository::class)
  * @Table(name="carts")
+ *
  */
 class Cart
 {
