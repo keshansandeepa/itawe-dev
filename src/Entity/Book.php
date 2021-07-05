@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BookRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -67,9 +68,15 @@ class Book
 
     /**
      * @ORM\Column(type="datetime", name="publication_date")
-     * @Groups ({"book_resource:read"})
+     *
      */
     private $publicationDate;
+
+    /**
+     *
+     * @Groups ({"book_resource:read"})
+     */
+    private $publicationDateFormatted;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
@@ -153,6 +160,11 @@ class Book
     public function getPublicationDate(): ?\DateTimeInterface
     {
         return $this->publicationDate;
+    }
+
+    public function getPublicationDateFormatted()
+    {
+        return $this->publicationDateFormatted = Carbon::instance($this->getPublicationDate())->toDateString();
     }
 
     public function setPublicationDate(\DateTimeInterface $publicationDate): self
