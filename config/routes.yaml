@@ -1,3 +1,8 @@
 index:
     path: /
     controller: App\Controller\HomeController::index
+
+app_login:
+    path: /api/login
+    controller : App\Controller\Auth\LoginController:login
+    methods: POST
