@@ -189,6 +189,14 @@ class Book
         return  $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
 
     public function setSlug(?string $slug):self
     {

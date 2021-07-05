@@ -2,26 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
- * @ApiResource(
- *     collectionOperations={},
- *     itemOperations={},
- *     normalizationContext={"groups" = "category_resource:read"},
- *     attributes={
-            "pagination_items_per_page" =10
- *     }
- *
- * )
+
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @Table(name="categories")
  *
@@ -32,19 +20,16 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"category_resource:read","book_resource:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"category_resource:read","book_resource:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"category_resource:read","book_resource:read"})
      *
      */
     private $slug;
@@ -52,7 +37,6 @@ class Category
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
-     * @Groups ({"category_resource:read"})
      */
     private $position;
 
