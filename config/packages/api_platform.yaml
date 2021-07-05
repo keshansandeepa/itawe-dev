@@ -6,11 +6,11 @@ api_platform:
     swagger:
         versions: [3]
     enable_docs: true
-    formats:
-        json:
-            mime_types:
-                - application/json
-        html:
-            mime_types:
-                - text/html
+#    formats:
+#        json:
+#            mime_types:
+#                - application/json
+#        html:
+#            mime_types:
+#                - text/html
 

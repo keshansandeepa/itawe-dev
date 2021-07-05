@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource(
  *     collectionOperations={"get"},
@@ -21,6 +22,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  *
  * ),
+ *
+ * @ApiFilter(SearchFilter::class, properties={
+        "categories.id":"partial"
+ *     })
  * @ORM\Entity(repositoryClass=BookRepository::class)
  * @Table(name="books")
  */

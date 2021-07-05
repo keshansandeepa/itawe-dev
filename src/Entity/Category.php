@@ -52,7 +52,7 @@ class Category
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
-     * @Groups ({"category_resource:read","book_resource:read"})
+     * @Groups ({"category_resource:read"})
      */
     private $position;
 
