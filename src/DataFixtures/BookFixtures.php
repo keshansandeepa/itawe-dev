@@ -17,7 +17,7 @@ use function Zenstruck\Foundry\faker;
 class BookFixtures extends Fixture implements DependentFixtureInterface
 {
 
-    private  SluggerInterface $slugger;
+    private SluggerInterface $slugger;
     private AuthorRepository $authorRepository;
     private CategoryRepository $categoryRepository;
 

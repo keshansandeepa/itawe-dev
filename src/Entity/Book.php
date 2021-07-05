@@ -15,9 +15,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     collectionOperations={"get"},
  *     itemOperations={"get"},
- *     normalizationContext={"groups" = "books_read_resource"},
+ *     normalizationContext={"groups" = "book_resource:read"},
  *     attributes={
- *     "pagination_items_per_page" =10
+ *     "pagination_items_per_page"=10
  *     }
  *
  * ),
@@ -32,67 +32,67 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length="255", unique=true)
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $title;
 
     /**
      * @ORM\Column (type="string", length="255", unique=true,nullable=true)
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime", name="publication_date")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $publicationDate;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $desktopCoverImage;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="mobile_cover_image")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $mobileCoverImage;
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $price;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
-     * @Groups ({"books_read_resource"})
+     * @Groups ({"book_resource:read"})
      */
     private $authors;
 

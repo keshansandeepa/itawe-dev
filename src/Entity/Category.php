@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * @ApiResource(
  *     collectionOperations={"get","post"},
  *     itemOperations={"get","put"},
- *     normalizationContext={"groups" = "category_resource"},
+ *     normalizationContext={"groups" = "category_resource:read"},
  *     attributes={
             "pagination_items_per_page" =10
  *     }
@@ -32,19 +32,19 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ({"category_resource"})
+     * @Groups ({"category_resource:read","book_resource:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"category_resource"})
+     * @Groups ({"category_resource:read","book_resource:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"category_resource"})
+     * @Groups ({"category_resource:read","book_resource:read"})
      *
      */
     private $slug;
@@ -52,7 +52,7 @@ class Category
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
-     * @Groups ({"category_resource"})
+     * @Groups ({"category_resource:read","book_resource:read"})
      */
     private $position;
 

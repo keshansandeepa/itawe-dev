@@ -31,7 +31,7 @@ class Cart
     private $user;
 
     /**
-     * @ORM\OneToMany (targetEntity=BookCart::class, mappedBy="book")
+     * @ORM\OneToMany (targetEntity=BookCart::class, mappedBy="books")
      *
      */
     private $books;
