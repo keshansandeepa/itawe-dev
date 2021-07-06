@@ -46,14 +46,10 @@ class Category
     private $position;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="categories")
+     * @ORM\OneToOne(targetEntity=Book::class, mappedBy="category", cascade={"persist", "remove"})
      */
-    private $books;
+    private $book;
 
-    public function __construct()
-    {
-        $this->books = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -97,13 +93,7 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection|Book[]
-     */
-    public function getBooks(): Collection
-    {
-        return $this->books;
-    }
+
 
     public function addBook(Book $book): self
     {
@@ -120,6 +110,23 @@ class Category
         if ($this->books->removeElement($book)) {
             $book->removeCategory($this);
         }
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(Book $book): self
+    {
+        // set the owning side of the relation if necessary
+        if ($book->getCategory() !== $this) {
+            $book->setCategory($this);
+        }
+
+        $this->book = $book;
 
         return $this;
     }

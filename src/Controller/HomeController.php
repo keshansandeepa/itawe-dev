@@ -21,7 +21,7 @@ class HomeController extends AbstractController
 
     public function index(AuthorRepository $authorRepository)
     {
-        dd($authorRepository->findBySlug('heather-avis'));
+        var_dump($this->getUser()->getCart());;
 
     }
 

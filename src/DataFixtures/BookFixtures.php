@@ -45,7 +45,7 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
             $author =$this->authorRepository->findBySlug($this->slugger->slug($book['author'])->toString());
             $newBook->addAuthor($author);
             $category = $this->categoryRepository->findBySlug($this->slugger->slug($book['category'])->toString());
-            $newBook->addCategory($category);
+            $newBook->setCategory($category);
 
         }
         $manager->flush();

@@ -2,7 +2,9 @@
 
 
 namespace App\Entity;
+use App\Service\Money;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -18,11 +20,6 @@ class BookCart
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne (targetEntity=Cart::class, inversedBy="bookCart")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $cart;
 
     /**
      * @ORM\ManyToOne (targetEntity= Book::class)
@@ -36,29 +33,17 @@ class BookCart
     private $quantity;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="books")
+     */
+    private $cart;
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCart()
-    {
-        return $this->cart;
-    }
-
-    /**
-     * @param mixed $cart
-     */
-    public function setCart($cart): void
-    {
-        $this->cart = $cart;
-    }
-
     /**
      * @return mixed
      */
@@ -76,11 +61,61 @@ class BookCart
     }
 
     /**
-     * @return mixed
+     *
+     * @Groups({"cart:index"})
+     */
+
+    public function getBookId()
+    {
+        return $this->getBook()->getId();
+    }
+
+    /**
+     *
+     * @Groups({"cart:index"})
+     */
+
+    public function getBookTitle()
+    {
+        return $this->getBook()->getTitle();
+    }
+
+    /**
+     *
+     * @Groups({"cart:index"})
+     */
+
+    public function getBookIsbn()
+    {
+       return $this->getBook()->getIsbn();
+    }
+
+    /**
+     *
+     * @Groups({"cart:index"})
      */
     public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    /**
+     *
+     * @Groups({"cart:index"})
+     */
+
+    public function getTotalPrice()
+    {
+        return $this->quantity * $this->getBook()->getPrice();
+    }
+
+    /**
+     * @return bool|string
+     * @Groups({"cart:index"})
+     */
+    public function getTotalPriceFormatted()
+    {
+        return (new Money($this->getTotalPrice()))->formatted();
     }
 
     /**
@@ -89,6 +124,18 @@ class BookCart
     public function setQuantity($quantity): void
     {
         $this->quantity = $quantity;
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
+
+        return $this;
     }
 
 

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
@@ -51,6 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToOne(targetEntity=Cart::class, mappedBy="user", cascade={"persist", "remove"})
+     * @Groups({"cart:index"})
      */
     private $cart;
 
@@ -159,6 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->cart;
     }
+
 
     public function setCart(Cart $cart): self
     {

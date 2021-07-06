@@ -88,11 +88,7 @@ class Book
      */
     private $price;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     * @Groups({"show_book","list_book"})
-     */
-    private $categories;
+
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
@@ -100,9 +96,14 @@ class Book
      */
     private $authors;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Category::class, inversedBy="book", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->authors = new ArrayCollection();
     }
 
@@ -197,6 +198,11 @@ class Book
         return  $this;
     }
 
+    public function getPrice()
+    {
+       return $this->price;
+    }
+
     /**
      * @return mixed
      */
@@ -212,29 +218,7 @@ class Book
         return  $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
 
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        $this->categories->removeElement($category);
-
-        return $this;
-    }
 
     /**
      * @return Collection|Author[]
@@ -256,6 +240,18 @@ class Book
     public function removeAuthor(Author $author): self
     {
         $this->authors->removeElement($author);
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
