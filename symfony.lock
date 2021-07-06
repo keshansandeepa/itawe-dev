@@ -2,9 +2,6 @@
     "api-platform/api-pack": {
         "version": "v1.3.0"
     },
-    "babdev/pagerfanta-bundle": {
-        "version": "v3.2.1"
-    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },
@@ -135,11 +132,32 @@
     "laminas/laminas-code": {
         "version": "4.4.0"
     },
+    "lcobucci/clock": {
+        "version": "2.0.0"
+    },
+    "lcobucci/jwt": {
+        "version": "4.1.4"
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
+        },
+        "files": [
+            "config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
     "moneyphp/money": {
         "version": "v3.3.1"
     },
     "myclabs/deep-copy": {
         "version": "1.10.2"
+    },
+    "namshi/jose": {
+        "version": "7.2.3"
     },
     "nelmio/alice": {
         "version": "3.2",
@@ -171,9 +189,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.10.5"
-    },
-    "pagerfanta/core": {
-        "version": "v3.2.0"
     },
     "phar-io/manifest": {
         "version": "2.0.1"
@@ -459,6 +474,9 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.23.0"
+    },
+    "symfony/polyfill-php56": {
+        "version": "v1.20.0"
     },
     "symfony/polyfill-php73": {
         "version": "v1.23.0"

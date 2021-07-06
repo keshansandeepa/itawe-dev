@@ -1,14 +1,10 @@
 security:
-    # https://symfony.com/doc/current/security/experimental_authenticators.html
-    enable_authenticator_manager: true
-    password_hashers:
-        App\Entity\User:
-            algorithm: auto
-
+    encoders:
+        App\Entity\User : bcrypt
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        #in_memory: { memory: null }
+        database:
             entity:
                 class: App\Entity\User
                 property: email
@@ -16,13 +12,19 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: app_user_provider
+        api:
+            pattern: ^/api
+            stateless: true
+            anonymous: true
             json_login:
-                check_path: app_login
-                username_path: email
-                password_path: password
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+            #main:
+            #anonymous: lazy
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -33,5 +35,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

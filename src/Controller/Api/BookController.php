@@ -29,7 +29,7 @@ class BookController extends BaseApiController
     {
         $book = $this->bookRepository->findAll();
         return new Response(
-            $this->serializer->serialize($book, 'json',['groups' => 'list_book']),
+            $this->serializer->serialize($book, 'json',['groups' => 'show_book']),
             Response::HTTP_OK,
             ['Content-type' => 'application/json']
         );
