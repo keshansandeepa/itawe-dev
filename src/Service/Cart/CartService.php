@@ -1,41 +1,54 @@
 <?php
 
-
 namespace App\Service\Cart;
+
 use App\Service\Money;
 use Symfony\Component\Security\Core\Security;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class CartService implements CartInterface
 {
-
     private $security;
-    private SerializerInterface $serializer;
 
-    public function __construct(Security $security,SerializerInterface $serializer)
+    public function __construct(Security $security)
     {
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
-        $this->serializer = $serializer;
     }
 
-    public function total() :Money
+    public function total()
     {
-        $price = 0;
-      foreach ($this->products() as $product)
-      {
-           $price += $product->getTotalPrice();
-      }
-
-      return new Money($price);
+        return $this->booksTotal();
     }
 
-    public function products()
+    public function isEmpty()
     {
+        if (empty($this->security->getUser()->getCart())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function books()
+    {
+        if ($this->isEmpty()) {
+            return [];
+        }
 
         return $this->security->getUser()->getCart()->getBooks();
+    }
+
+    public function subTotal()
+    {
+        return true;
+    }
+
+    public function booksTotal()
+    {
+        $price = new Money(0);
+        foreach ($this->books() as $product) {
+            $price->add($product->getTotalPrice());
+        }
+
+        return $price;
     }
 }

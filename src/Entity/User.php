@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Table(name="users")
- *
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -159,7 +158,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->cart;
     }
-
 
     public function setCart(Cart $cart): self
     {

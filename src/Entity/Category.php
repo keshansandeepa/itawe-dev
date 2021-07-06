@@ -10,10 +10,8 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
-
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @Table(name="categories")
- *
  */
 class Category
 {
@@ -28,14 +26,12 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"list_category","show_book","list_book"})
-     *
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"list_category","show_book","list_book"})
-     *
      */
     private $slug;
 
@@ -54,9 +50,6 @@ class Category
     {
         $this->books = new ArrayCollection();
     }
-
-
-
 
     public function getId(): ?int
     {
@@ -87,7 +80,6 @@ class Category
         return $this;
     }
 
-
     public function getPosition(): ?int
     {
         return $this->position;
@@ -110,7 +102,7 @@ class Category
 
     public function addBook(Book $book): self
     {
-        if (!$this->books->contains($book)) {
+        if (! $this->books->contains($book)) {
             $this->books[] = $book;
             $book->setCategory($this);
         }
@@ -129,8 +121,4 @@ class Category
 
         return $this;
     }
-
-
-
-
 }

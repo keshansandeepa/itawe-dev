@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CartRepository::class)
  * @Table(name="carts")
- *
  */
 class Cart
 {
@@ -27,7 +26,6 @@ class Cart
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="cart", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
-     *
      */
     private $user;
 
@@ -35,7 +33,6 @@ class Cart
      * @ORM\OneToMany(targetEntity=BookCart::class, mappedBy="cart")
      */
     private $books;
-
 
     public function __construct()
     {
@@ -69,7 +66,7 @@ class Cart
 
     public function addBook(BookCart $book): self
     {
-        if (!$this->books->contains($book)) {
+        if (! $this->books->contains($book)) {
             $this->books[] = $book;
             $book->setCart($this);
         }
@@ -88,7 +85,4 @@ class Cart
 
         return $this;
     }
-
-
-
 }

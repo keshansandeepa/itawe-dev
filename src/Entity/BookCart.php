@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Entity;
+
 use App\Service\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -12,14 +12,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class BookCart
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
-
 
     /**
      * @ORM\ManyToOne (targetEntity= Book::class)
@@ -44,6 +42,7 @@ class BookCart
     {
         return $this->id;
     }
+
     /**
      * @return mixed
      */
@@ -61,37 +60,30 @@ class BookCart
     }
 
     /**
-     *
      * @Groups({"cart:index"})
      */
-
     public function getBookId()
     {
         return $this->getBook()->getId();
     }
 
     /**
-     *
      * @Groups({"cart:index"})
      */
-
     public function getBookTitle()
     {
         return $this->getBook()->getTitle();
     }
 
     /**
-     *
      * @Groups({"cart:index"})
      */
-
     public function getBookIsbn()
     {
-       return $this->getBook()->getIsbn();
+        return $this->getBook()->getIsbn();
     }
 
     /**
-     *
      * @Groups({"cart:index"})
      */
     public function getQuantity()
@@ -99,14 +91,22 @@ class BookCart
         return $this->quantity;
     }
 
-    /**
-     *
-     * @Groups({"cart:index"})
-     */
-
     public function getTotalPrice()
     {
-        return $this->quantity * $this->getBook()->getPrice();
+        return $this->getBookPrice()->multiply($this->getQuantity());
+    }
+
+    /**
+     * @Groups({"cart:index"})
+     */
+    public function getBookPriceFormatted()
+    {
+        return (new Money($this->getBook()->getPrice()))->formatted();
+    }
+
+    public function getBookPrice()
+    {
+        return new Money($this->getBook()->getPrice());
     }
 
     /**
@@ -115,7 +115,7 @@ class BookCart
      */
     public function getTotalPriceFormatted()
     {
-        return (new Money($this->getTotalPrice()))->formatted();
+        return $this->getTotalPrice()->formatted();
     }
 
     /**
@@ -137,9 +137,4 @@ class BookCart
 
         return $this;
     }
-
-
-
-
-
 }

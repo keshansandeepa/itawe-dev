@@ -13,13 +13,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
- *
  * @ORM\Entity(repositoryClass=BookRepository::class)
  * @Table(name="books")
  */
 class Book
 {
-
     use TimestampableEntity;
     /**
      * @ORM\Id
@@ -32,35 +30,29 @@ class Book
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="string", length="255", unique=true)
-     *
      */
     private $isbn;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text")
-     *
      */
     private $title;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column (type="string", length="255", unique=true,nullable=true)
-     *
      */
     private $slug;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text", nullable=true)
-     *
      */
     private $description;
 
     /**
-     *
      * @ORM\Column(type="datetime", name="publication_date")
-     *
      */
     private $publicationDate;
 
@@ -84,10 +76,8 @@ class Book
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     *
      */
     private $price;
-
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
@@ -100,14 +90,10 @@ class Book
      */
     private $category;
 
-
-
     public function __construct()
     {
         $this->authors = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -191,16 +177,16 @@ class Book
         return $this;
     }
 
-    public function setPrice(?int $price):self
+    public function setPrice(?float $price): self
     {
-        $this->price = $price*100;
+        $this->price = $price * 100;
 
-        return  $this;
+        return $this;
     }
 
     public function getPrice()
     {
-       return $this->price;
+        return $this->price;
     }
 
     /**
@@ -211,14 +197,12 @@ class Book
         return $this->slug;
     }
 
-
-    public function setSlug(?string $slug):self
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
-        return  $this;
+
+        return $this;
     }
-
-
 
     /**
      * @return Collection|Author[]
@@ -230,7 +214,7 @@ class Book
 
     public function addAuthor(Author $author): self
     {
-        if (!$this->authors->contains($author)) {
+        if (! $this->authors->contains($author)) {
             $this->authors[] = $author;
         }
 
@@ -255,6 +239,4 @@ class Book
 
         return $this;
     }
-
-
 }
