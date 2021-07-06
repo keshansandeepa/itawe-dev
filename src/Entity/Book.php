@@ -72,13 +72,13 @@ class Book
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
-     *
+     * @Groups({"show_book", "list_book"})
      */
     private $desktopCoverImage;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="mobile_cover_image")
-     *
+     * @Groups({"show_book", "list_book"})
      */
     private $mobileCoverImage;
 

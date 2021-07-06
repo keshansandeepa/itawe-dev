@@ -43,6 +43,7 @@ class BookController extends BaseApiController
     {
         $book = $this->bookRepository->find($id);
 
+
         if (empty($book)){
             return $this->notFoundJsonResponse('Book');
         }

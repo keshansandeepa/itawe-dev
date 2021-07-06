@@ -21,7 +21,8 @@ class HomeController extends AbstractController
 
     public function index(AuthorRepository $authorRepository)
     {
-        var_dump($this->getUser()->getCart());;
+
+
 
     }
 
