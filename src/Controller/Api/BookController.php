@@ -28,11 +28,8 @@ class BookController extends BaseApiController
     public function index()
     {
         $book = $this->bookRepository->findAll();
-        $this->serializer->serialize($book, 'json',[
-            'groups' => 'show_book'
-        ]);
         return new Response(
-            $this->serializer->serialize($book, 'json',['groups' => 'show_book']),
+            $this->serializer->serialize($book, 'json',['groups' => 'list_book']),
             Response::HTTP_OK,
             ['Content-type' => 'application/json']
         );
@@ -49,10 +46,6 @@ class BookController extends BaseApiController
         if (empty($book)){
             return $this->notFoundJsonResponse('Book');
         }
-
-        $this->serializer->serialize($book, 'json',[
-            'groups' => 'show_book'
-        ]);
 
         return new Response(
             $this->serializer->serialize($book, 'json',['groups' => 'show_book','list_category']),

@@ -21,26 +21,27 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"show_category", "list_category"})
+     * @Groups({"list_cateogory", "show_book","list_book"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_category"})
+     * @Groups({"list_category","show_book","list_book"})
+     *
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_category"})
+     * @Groups({"list_category","show_book","list_book"})
      *
      */
     private $slug;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
+     *@Groups({"list_category","show_book","list_book"})
      */
     private $position;
 

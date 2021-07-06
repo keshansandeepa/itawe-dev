@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  *
@@ -65,7 +66,7 @@ class Book
 
     /**
      * @Groups({"show_book", "list_book"})
-     *
+     * @SerializedName("publicationDate ")
      */
     private $publicationDateFormatted;
 
@@ -89,7 +90,7 @@ class Book
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     * @Groups({"show_book"})
+     * @Groups({"show_book","list_book"})
      */
     private $categories;
 
