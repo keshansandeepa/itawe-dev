@@ -89,7 +89,6 @@ class Book
     private $price;
 
 
-
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
      * @Groups({"show_book"})
@@ -97,10 +96,11 @@ class Book
     private $authors;
 
     /**
-     * @ORM\OneToOne(targetEntity=Category::class, inversedBy="book", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="books")
      */
     private $category;
+
+
 
     public function __construct()
     {
@@ -249,10 +249,12 @@ class Book
         return $this->category;
     }
 
-    public function setCategory(Category $category): self
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 
         return $this;
     }
+
+
 }

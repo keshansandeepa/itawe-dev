@@ -46,9 +46,16 @@ class Category
     private $position;
 
     /**
-     * @ORM\OneToOne(targetEntity=Book::class, mappedBy="category", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Book::class, mappedBy="category")
      */
-    private $book;
+    private $books;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
+
+
 
 
     public function getId(): ?int
@@ -93,13 +100,19 @@ class Category
         return $this;
     }
 
-
+    /**
+     * @return Collection|Book[]
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
 
     public function addBook(Book $book): self
     {
         if (!$this->books->contains($book)) {
             $this->books[] = $book;
-            $book->addCategory($this);
+            $book->setCategory($this);
         }
 
         return $this;
@@ -108,26 +121,16 @@ class Category
     public function removeBook(Book $book): self
     {
         if ($this->books->removeElement($book)) {
-            $book->removeCategory($this);
+            // set the owning side to null (unless already changed)
+            if ($book->getCategory() === $this) {
+                $book->setCategory(null);
+            }
         }
 
         return $this;
     }
 
-    public function getBook(): ?Book
-    {
-        return $this->book;
-    }
 
-    public function setBook(Book $book): self
-    {
-        // set the owning side of the relation if necessary
-        if ($book->getCategory() !== $this) {
-            $book->setCategory($this);
-        }
 
-        $this->book = $book;
 
-        return $this;
-    }
 }
