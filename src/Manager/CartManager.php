@@ -2,17 +2,17 @@
 
 namespace App\Manager;
 
+use App\Entity\BookCart;
 use App\Entity\Cart;
-use App\Repository\BookCartRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CartManager
 {
-    public function __construct(EntityManagerInterface $entityManager, BookCartRepository $bookCartRepository)
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-
-        $this->bookCartRepository = $bookCartRepository;
     }
 
     public function findOrAddUserCart($user): Cart
@@ -29,5 +29,12 @@ class CartManager
         $this->entityManager->flush();
 
         return $userCart;
+    }
+
+    public function deleteBook(Cart $cart, BookCart $book)
+    {
+        $cart->removeBook($book);
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
     }
 }

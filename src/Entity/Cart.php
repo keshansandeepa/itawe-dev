@@ -30,7 +30,7 @@ class Cart
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=BookCart::class, mappedBy="cart")
+     * @ORM\OneToMany(targetEntity=BookCart::class, mappedBy="cart",orphanRemoval=true,cascade={"persist", "remove"})
      */
     private $books;
 

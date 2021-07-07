@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\BookCart;
-use App\Entity\User;
 use App\Repository\BookCartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +12,6 @@ class BookCartManager
     private EntityManagerInterface $entityManager;
     private BookCartRepository $bookCartRepository;
 
-    /**
-     * BookCartManager constructor.
-     */
     public function __construct(EntityManagerInterface $entityManager, BookCartRepository $bookCartRepository)
     {
         $this->entityManager = $entityManager;
