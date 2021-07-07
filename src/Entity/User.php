@@ -162,6 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCart(Cart $cart): self
     {
         // set the owning side of the relation if necessary
+
         if ($cart->getUser() !== $this) {
             $cart->setUser($this);
         }

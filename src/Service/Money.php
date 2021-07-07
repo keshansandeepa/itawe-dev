@@ -10,7 +10,7 @@ use NumberFormatter;
 
 class Money
 {
-    protected $money;
+    protected BaseMoney $money;
 
     public function __construct($value)
     {
