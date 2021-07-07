@@ -68,9 +68,4 @@ class CartService implements CartInterface
            ];
         });
     }
-
-    public function updateStorePayload(array $books, BookRepository $bookRepository): ArrayCollection
-    {
-        $requestBookCollection = new ArrayCollection($books);
-    }
 }

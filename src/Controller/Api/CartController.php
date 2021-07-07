@@ -4,8 +4,11 @@ namespace App\Controller\Api;
 
 use App\Entity\Book;
 use App\Manager\BookCartManager;
+use App\Manager\CartManager;
+use App\Repository\BookCartRepository;
 use App\Repository\BookRepository;
 use App\Service\Cart\CartService;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,23 +17,36 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CartController extends BaseApiController
 {
     private SerializerInterface $serializer;
+    private BookCartManager $bookCartManager;
+    private CartService $cartService;
+    private BookCartRepository $bookCartRepository;
+    private CartManager $cartManager;
 
-    public function __construct(SerializerInterface $serializer)
-    {
+    public function __construct(
+        SerializerInterface $serializer,
+        BookCartManager $bookCartManager,
+        CartService $cartService,
+        BookCartRepository $bookCartRepository,
+        CartManager $cartManager
+    ) {
         $this->serializer = $serializer;
+        $this->bookCartManager = $bookCartManager;
+        $this->cartService = $cartService;
+        $this->bookCartRepository = $bookCartRepository;
+        $this->cartManager = $cartManager;
     }
 
     /**
      * @Route ("/api/cart", methods={"GET"})
      */
-    public function index(CartService $cart)
+    public function index(): Response
     {
         $data = [
-            'books' => $cart->books(),
+            'books' => $this->cartService->books(),
             'meta' => [
-                'empty' => $cart->isEmpty(),
-                'subtotal' => $cart->subTotal(),
-                'totalPrice' => $cart->total()->formatted(),
+                'empty' => $this->cartService->isEmpty(),
+                'subtotal' => $this->cartService->subTotal(),
+                'totalPrice' => $this->cartService->total()->formatted(),
             ],
         ];
 
@@ -44,31 +60,100 @@ class CartController extends BaseApiController
     /**
      * @Route ("/api/cart", methods={"POST"})
      */
-    public function post(Request $request, BookCartManager $bookCartManager, CartService $cartService, BookRepository $bookRepository)
+    public function post(Request $request, BookRepository $bookRepository): Response
     {
-        $cartStorePayload = $cartService->getStorePayload($request->toArray()['books'], $bookRepository);
+        $this->getDoctrine()->getConnection()->beginTransaction();
 
-        $bookCartManager->save($cartStorePayload, $this->getUser());
+        try {
+            $cartStorePayload = $this->cartService->getStorePayload($request->toArray()['books'], $bookRepository);
 
-        return new Response(
-            $this->serializer->serialize(['message' => 'Success'], 'json', ['groups' => 'cart:index']),
-            Response::HTTP_CREATED,
-            ['Content-type' => 'application/json']
-        );
+            $cartUser = $this->cartManager->findOrAddUserCart($this->getUser());
+
+            $this->bookCartManager->save($cartStorePayload, $cartUser);
+
+            $this->getDoctrine()->getConnection()->commit();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Success'], 'json'),
+                Response::HTTP_CREATED,
+                ['Content-type' => 'application/json']
+            );
+        } catch (Exception $exception) {
+            $this->getDoctrine()->getConnection()->rollBack();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Error'], 'json'),
+                $exception->getCode(),
+                ['Content-type' => 'application/json']
+            );
+        }
     }
 
     /**
      * @Route ("/api/carts/book/{id}", methods={"PUT"})
      */
-    public function put(Request $request, Book $book)
+    public function put(Request $request, Book $book): Response
     {
-        dd('test');
-        $cartStorePayload = $cartService->updateStorePayload($request->toArray());
+        $this->getDoctrine()->getConnection()->beginTransaction();
 
-        return new Response(
-            $this->serializer->serialize(['message' => 'Success'], 'json', ['groups' => 'cart:index']),
-            Response::HTTP_NO_CONTENT,
-            ['Content-type' => 'application/json']
-        );
+        try {
+            $requestArray = $request->toArray();
+
+            $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
+
+            if (empty($bookCart)) {
+                return new Response(
+                    $this->serializer->serialize(['message' => 'Not Found'], 'json'),
+                    Response::HTTP_NOT_FOUND,
+                    ['Content-type' => 'application/json']
+                );
+            }
+
+            $this->bookCartManager->update($bookCart, $requestArray['quantity']);
+
+            $this->getDoctrine()->getConnection()->commit();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Cart updated successfully'], 'json'),
+                Response::HTTP_OK,
+                ['Content-type' => 'application/json']
+            );
+        } catch (Exception $exception) {
+            $this->getDoctrine()->getConnection()->rollBack();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Error'], 'json'),
+                $exception->getCode(),
+                ['Content-type' => 'application/json']
+            );
+        }
+    }
+
+    /**
+     * @Route ("/api/carts/book/{id}", methods={"DELETE"})
+     */
+    public function delete(Request $request, Book $book, CartManager $cartManager): Response
+    {
+        $this->getDoctrine()->getConnection()->beginTransaction();
+
+        try {
+            $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
+            $cartManager->deleteBook($this->getUser()->getCart(), $bookCart);
+            $this->getDoctrine()->getConnection()->commit();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Success'], 'json'),
+                Response::HTTP_OK,
+                ['Content-type' => 'application/json']
+            );
+        } catch (Exception $exception) {
+            $this->getDoctrine()->getConnection()->rollBack();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Error'], 'json'),
+                $exception->getCode(),
+                ['Content-type' => 'application/json']
+            );
+        }
     }
 }
