@@ -47,7 +47,9 @@ class CartService implements CartInterface
     public function booksTotal(): Money
     {
         $price = new Money(0);
-
+        if ($this->isEmpty()) {
+            return  $price;
+        }
         $this->books()->map(function ($item) use (&$price) {
             $price->add($item->getTotalPrice());
         });
