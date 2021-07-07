@@ -23,10 +23,10 @@ class BookCartManager
         $this->bookCartRepository = $bookCartRepository;
     }
 
-    public function save(ArrayCollection $cartStorePayload, User $user): void
+    public function save(ArrayCollection $cartStorePayload, $userCart): void
     {
-        $cartStorePayload->map(function ($bookCollection) use ($user) {
-            $this->findOrAddBookCart($bookCollection['book'], $user, $bookCollection['quantity']);
+        $cartStorePayload->map(function ($bookCollection) use ($userCart) {
+            $this->findOrAddBookCart($bookCollection['book'], $userCart, $bookCollection['quantity']);
         });
         $this->entityManager->flush();
     }

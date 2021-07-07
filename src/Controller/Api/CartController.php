@@ -17,23 +17,30 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CartController extends BaseApiController
 {
     private SerializerInterface $serializer;
+    private BookCartManager $bookCartManager;
+    private CartService $cartService;
+    private BookCartRepository $bookCartRepository;
 
-    public function __construct(SerializerInterface $serializer)
+
+    public function __construct(SerializerInterface $serializer, BookCartManager $bookCartManager, CartService $cartService, BookCartRepository $bookCartRepository)
     {
         $this->serializer = $serializer;
+        $this->bookCartManager = $bookCartManager;
+        $this->cartService = $cartService;
+        $this->bookCartRepository = $bookCartRepository;
     }
 
     /**
      * @Route ("/api/cart", methods={"GET"})
      */
-    public function index(CartService $cart)
+    public function index()
     {
         $data = [
-            'books' => $cart->books(),
+            'books' => $this->cartService->books(),
             'meta' => [
-                'empty' => $cart->isEmpty(),
-                'subtotal' => $cart->subTotal(),
-                'totalPrice' => $cart->total()->formatted(),
+                'empty' => $this->cartService->isEmpty(),
+                'subtotal' => $this->cartService->subTotal(),
+                'totalPrice' => $this->cartService->total()->formatted(),
             ],
         ];
 
@@ -47,21 +54,16 @@ class CartController extends BaseApiController
     /**
      * @Route ("/api/cart", methods={"POST"})
      */
-    public function post(
-        Request $request,
-        BookCartManager $bookCartManager,
-        CartService $cartService,
-        BookRepository $bookRepository,
-        CartManager $cartManager
-    ) {
+    public function post(Request $request, BookRepository $bookRepository, CartManager $cartManager)
+    {
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
-            $cartStorePayload = $cartService->getStorePayload($request->toArray()['books'], $bookRepository);
+            $cartStorePayload = $this->cartService->getStorePayload($request->toArray()['books'], $bookRepository);
 
             $cartUser = $cartManager->findOrAddUserCart($this->getUser());
 
-            $bookCartManager->save($cartStorePayload, $cartUser);
+            $this->bookCartManager->save($cartStorePayload, $cartUser);
 
             $this->getDoctrine()->getConnection()->commit();
 
@@ -84,18 +86,15 @@ class CartController extends BaseApiController
     /**
      * @Route ("/api/carts/book/{id}", methods={"PUT"})
      */
-    public function put(Request $request, Book $book, BookCartRepository $bookCartRepository, BookCartManager $bookCartManager)
+    public function put(Request $request, Book $book, BookCartManager $bookCartManager)
     {
-
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
             $requestArray = $request->toArray();
-            
 
-            $bookCart = $bookCartRepository->findBookCart($book, $this->getUser()->getCart());
+            $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
 
-           
             if (empty($bookCart)) {
                 return new Response(
                     $this->serializer->serialize(['message' => 'Not Found'], 'json'),
@@ -122,5 +121,13 @@ class CartController extends BaseApiController
                 ['Content-type' => 'application/json']
             );
         }
+    }
+
+    /**
+     * @Route ("/api/carts/book/{id}", methods={"DELETE"})
+     */
+    public function delete(Request $request, Book $book)
+    {
+        $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
     }
 }
