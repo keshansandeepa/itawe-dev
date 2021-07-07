@@ -9,5 +9,6 @@ class HomeController extends AbstractController
 {
     public function index(AuthorRepository $authorRepository)
     {
+
     }
 }
