@@ -21,13 +21,11 @@ class AuthorRepository extends ServiceEntityRepository
 
     public function findBySlug($slug)
     {
-
         return $this->createQueryBuilder('authorSlug')
         ->andWhere('authorSlug.slug = :slug')
         ->setParameter('slug', $slug)
         ->getQuery()
         ->getOneOrNullResult();
-
     }
 
     // /**

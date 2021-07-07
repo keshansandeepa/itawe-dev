@@ -1,8 +1,10 @@
 <?php
 
-
 namespace App\Entity;
+
+use App\Service\Money;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -10,19 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BookCart
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToOne (targetEntity=Cart::class, inversedBy="bookCart")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $cart;
 
     /**
      * @ORM\ManyToOne (targetEntity= Book::class)
@@ -36,27 +31,16 @@ class BookCart
     private $quantity;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="books")
+     */
+    private $cart;
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCart()
-    {
-        return $this->cart;
-    }
-
-    /**
-     * @param mixed $cart
-     */
-    public function setCart($cart): void
-    {
-        $this->cart = $cart;
     }
 
     /**
@@ -76,11 +60,62 @@ class BookCart
     }
 
     /**
-     * @return mixed
+     * @Groups({"cart:index"})
+     */
+    public function getBookId()
+    {
+        return $this->getBook()->getId();
+    }
+
+    /**
+     * @Groups({"cart:index"})
+     */
+    public function getBookTitle()
+    {
+        return $this->getBook()->getTitle();
+    }
+
+    /**
+     * @Groups({"cart:index"})
+     */
+    public function getBookIsbn()
+    {
+        return $this->getBook()->getIsbn();
+    }
+
+    /**
+     * @Groups({"cart:index"})
      */
     public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    public function getTotalPrice()
+    {
+        return $this->getBookPrice()->multiply($this->getQuantity());
+    }
+
+    /**
+     * @Groups({"cart:index"})
+     */
+    public function getBookPriceFormatted()
+    {
+        return (new Money($this->getBook()->getPrice()))->formatted();
+    }
+
+    public function getBookPrice()
+    {
+        return new Money($this->getBook()->getPrice());
+    }
+
+    /**
+     * @return bool|string
+     * @Groups({"cart:index"})
+     */
+    public function getTotalPriceFormatted()
+    {
+        return $this->getTotalPrice()->formatted();
     }
 
     /**
@@ -91,8 +126,15 @@ class BookCart
         $this->quantity = $quantity;
     }
 
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
 
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
 
-
-
+        return $this;
+    }
 }

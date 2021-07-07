@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\DataFixtures;
-
 
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -11,7 +9,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryFixtures extends Fixture
 {
-
     private SluggerInterface $slugger;
 
     public function __construct(SluggerInterface $slugger)
@@ -21,8 +18,7 @@ class CategoryFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        foreach ($this->dataObject() as $key => $value)
-        {
+        foreach ($this->dataObject() as $key => $value) {
             $category = new Category();
             $category->setName($key);
             $category->setSlug($this->slugger->slug($key)->toString());
@@ -39,9 +35,9 @@ class CategoryFixtures extends Fixture
     {
         return [
             'Children' => 1,
-            'Fiction' =>  2,
+            'Fiction' => 2,
             'Fantasy' => 3,
-            'History' =>4
+            'History' => 4,
         ];
     }
 }

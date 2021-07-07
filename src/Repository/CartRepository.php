@@ -47,6 +47,4 @@ class CartRepository extends ServiceEntityRepository
         ;
     }
     */
-
-
 }

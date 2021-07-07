@@ -10,15 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
- *
  * @ORM\Entity(repositoryClass=BookRepository::class)
  * @Table(name="books")
  */
 class Book
 {
-
     use TimestampableEntity;
     /**
      * @ORM\Id
@@ -31,67 +30,54 @@ class Book
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="string", length="255", unique=true)
-     *
      */
     private $isbn;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text")
-     *
      */
     private $title;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column (type="string", length="255", unique=true,nullable=true)
-     *
      */
     private $slug;
 
     /**
      * @Groups({"show_book", "list_book"})
      * @ORM\Column(type="text", nullable=true)
-     *
      */
     private $description;
 
     /**
-     *
      * @ORM\Column(type="datetime", name="publication_date")
-     *
      */
     private $publicationDate;
 
     /**
      * @Groups({"show_book", "list_book"})
-     *
+     * @SerializedName("publicationDate ")
      */
     private $publicationDateFormatted;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
-     *
+     * @Groups({"show_book", "list_book"})
      */
     private $desktopCoverImage;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="mobile_cover_image")
-     *
+     * @Groups({"show_book", "list_book"})
      */
     private $mobileCoverImage;
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     *
      */
     private $price;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
-     * @Groups({"show_book"})
-     */
-    private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
@@ -99,13 +85,15 @@ class Book
      */
     private $authors;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="books")
+     */
+    private $category;
+
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->authors = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -189,11 +177,16 @@ class Book
         return $this;
     }
 
-    public function setPrice(?int $price):self
+    public function setPrice(?float $price): self
     {
-        $this->price = $price*100;
+        $this->price = $price * 100;
 
-        return  $this;
+        return $this;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     /**
@@ -204,33 +197,9 @@ class Book
         return $this->slug;
     }
 
-
-    public function setSlug(?string $slug):self
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
-        return  $this;
-    }
-
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        $this->categories->removeElement($category);
 
         return $this;
     }
@@ -245,7 +214,7 @@ class Book
 
     public function addAuthor(Author $author): self
     {
-        if (!$this->authors->contains($author)) {
+        if (! $this->authors->contains($author)) {
             $this->authors[] = $author;
         }
 
@@ -255,6 +224,18 @@ class Book
     public function removeAuthor(Author $author): self
     {
         $this->authors->removeElement($author);
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -21,13 +21,11 @@ class CategoryRepository extends ServiceEntityRepository
 
     public function findBySlug($slug)
     {
-
         return $this->createQueryBuilder('categorySlug')
             ->andWhere('categorySlug.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult();
-
     }
 
     // /**

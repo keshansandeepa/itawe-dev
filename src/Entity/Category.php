@@ -10,10 +10,8 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
-
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @Table(name="categories")
- *
  */
 class Category
 {
@@ -21,31 +19,30 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"show_category", "list_category"})
+     * @Groups({"list_cateogory", "show_book","list_book"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_category"})
+     * @Groups({"list_category","show_book","list_book"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_category"})
-     *
+     * @Groups({"list_category","show_book","list_book"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
+     *@Groups({"list_category","show_book","list_book"})
      */
     private $position;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="categories")
+     * @ORM\OneToMany(targetEntity=Book::class, mappedBy="category")
      */
     private $books;
 
@@ -83,7 +80,6 @@ class Category
         return $this;
     }
 
-
     public function getPosition(): ?int
     {
         return $this->position;
@@ -106,9 +102,9 @@ class Category
 
     public function addBook(Book $book): self
     {
-        if (!$this->books->contains($book)) {
+        if (! $this->books->contains($book)) {
             $this->books[] = $book;
-            $book->addCategory($this);
+            $book->setCategory($this);
         }
 
         return $this;
@@ -117,7 +113,10 @@ class Category
     public function removeBook(Book $book): self
     {
         if ($this->books->removeElement($book)) {
-            $book->removeCategory($this);
+            // set the owning side to null (unless already changed)
+            if ($book->getCategory() === $this) {
+                $book->setCategory(null);
+            }
         }
 
         return $this;
