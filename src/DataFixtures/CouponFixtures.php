@@ -2,14 +2,14 @@
 
 namespace App\DataFixtures;
 
-use App\Factory\CouponFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+class CouponFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        CouponFactory::createMany(5);
+        $couponFixture = new CouponFixtures();
+
     }
 }

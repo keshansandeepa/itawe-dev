@@ -156,4 +156,11 @@ class CartController extends BaseApiController
             );
         }
     }
+
+    /**
+     * @Route ("/api/cart/coupon", methods={"POST"})
+     */
+    public function addCoupon()
+    {
+    }
 }
