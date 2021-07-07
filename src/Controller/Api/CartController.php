@@ -140,6 +140,7 @@ class CartController extends BaseApiController
             $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
             $cartManager->deleteBook($this->getUser()->getCart(), $bookCart);
             $this->getDoctrine()->getConnection()->commit();
+
             return new Response(
                 $this->serializer->serialize(['message' => 'Success'], 'json'),
                 Response::HTTP_OK,
