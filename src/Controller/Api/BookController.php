@@ -5,14 +5,17 @@ namespace App\Controller\Api;
 use App\Repository\BookRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class BookController extends BaseApiController
 {
     private BookRepository $bookRepository;
+    private SerializerInterface $serializer;
 
-    public function __construct(BookRepository $bookRepository)
+    public function __construct(BookRepository $bookRepository, SerializerInterface $serializer)
     {
         $this->bookRepository = $bookRepository;
+        $this->serializer = $serializer;
     }
 
     /**
