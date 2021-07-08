@@ -5,6 +5,7 @@ namespace App\Factory;
 use App\Entity\Coupon;
 use App\Enum\CouponType;
 use App\Repository\CouponRepository;
+use Carbon\Carbon;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -37,13 +38,13 @@ final class CouponFactory extends ModelFactory
     protected function getDefaults(): array
     {
         $couponType = $this->generateCouponType();
-        $starting_date = self::faker()->dateTimeBetween('now', '+5 days', 'Asia/Kolkata');
-        $endDate = self::faker()->dateTimeBetween($starting_date, '+5 days', 'Asia/KolKata');
+        $starting_date = Carbon::now('Asia/Kolkata');
+        $endDate = Carbon::now('Asia/Kolkata')->addDays(5);
 
         return [
             'coupon_code' => self::faker()->isbn10(),
-            'start_date_time' => $starting_date,
-            'end_date_time' => $endDate,
+            'start_date' => $starting_date,
+            'end_date' => $endDate,
             'coupon_type' => $couponType,
             'coupon_value' => CouponType::fixed == $couponType ? self::faker()->numberBetween(900, 1500) : null,
             'coupon_percent_off' => CouponType::percent == $couponType ? 15 : null,

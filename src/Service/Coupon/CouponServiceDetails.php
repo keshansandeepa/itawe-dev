@@ -27,8 +27,9 @@ class CouponServiceDetails
         $userCoupon = $this->security->getUser()->getCart()->getCoupon();
         if (CouponType::percent == $userCoupon->getCouponType()) {
             $couponCodePercentOff = $userCoupon->getCouponPercentOff();
+            $oldTotal = new Money($total->amount());
             $appliedAmount = $total->multiply($couponCodePercentOff)->divide(100);
-            $remainingTotal = $total->subtract($appliedAmount);
+            $remainingTotal = $oldTotal->subtract($appliedAmount);
 
             if (0 == gmp_sign($remainingTotal->amount()) || -1 == gmp_sign($remainingTotal->amount())) {
                 return [
