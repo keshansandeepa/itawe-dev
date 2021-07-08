@@ -197,7 +197,6 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
                 'mobile_cover_image' => '/images/magictreehouse.jpg',
                 'quantity' => 10,
             ],
-
         ];
     }
 
