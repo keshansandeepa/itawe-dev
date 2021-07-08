@@ -26,11 +26,19 @@ class CartService implements CartInterface
         $this->couponServiceDetails = $couponServiceDetails;
     }
 
+    /**
+     * @return Money
+     *               Total
+     */
     public function total(): Money
     {
         return $this->subTotal();
     }
 
+    /**
+     * @return bool
+     *              Check Cart Empty
+     */
     public function isEmpty(): bool
     {
         if (empty($this->getUserCartPayload())) {
@@ -43,6 +51,9 @@ class CartService implements CartInterface
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function books()
     {
         if ($this->isEmpty()) {
