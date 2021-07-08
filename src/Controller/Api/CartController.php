@@ -109,7 +109,7 @@ class CartController extends AbstractController
 
             if (empty($bookCart)) {
                 return new Response(
-                    $this->serializer->serialize(['message' => 'Not Found'], 'json'),
+                    $this->serializer->serialize(['message' => 'Not found'], 'json'),
                     Response::HTTP_NOT_FOUND,
                     ['Content-type' => 'application/json']
                 );
@@ -191,14 +191,14 @@ class CartController extends AbstractController
     }
 
     /**
-     * @Route ("/api/cart/coupon/{id}", methods={"DELETE"})
+     * @Route ("/api/cart/coupon/{code}", methods={"DELETE"})
      */
-    public function deleteCoupon(Request $request, $id, CouponService $couponService): Response
+    public function deleteCoupon(Request $request, $code, CouponService $couponService): Response
     {
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
-            $couponService->removeCoupon($id, $this->cartManager);
+            $couponService->removeCoupon($code, $this->cartManager);
             $this->getDoctrine()->getConnection()->commit();
 
             return new Response(
