@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+use App\Service\Money;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -76,6 +77,7 @@ class Book
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
+     * @Groups({"show_book", "list_book"})
      */
     private $price;
 
@@ -94,6 +96,11 @@ class Book
      * @ORM\OneToMany(targetEntity=BookCart::class, mappedBy="book", orphanRemoval=true)
      */
     private $cart;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $quantity;
 
     public function __construct()
     {
@@ -195,6 +202,15 @@ class Book
         return $this->price;
     }
 
+    /***
+     *
+     * @Groups({"show_book"})
+     */
+    public function getFormattedBookPrice()
+    {
+        return (new Money($this->getPrice()))->formatted();
+    }
+
     /**
      * @return mixed
      */
@@ -272,6 +288,18 @@ class Book
                 $cart->setBook(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }
