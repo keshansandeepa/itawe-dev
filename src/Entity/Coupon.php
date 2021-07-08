@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CouponRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 
@@ -22,37 +24,47 @@ class Coupon
     /**
      * @ORM\Column(type="text")
      */
-    private $coupon_code;
+    private $couponCode;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $StartDateTime;
+    private $startDateTime;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $EndDateTime;
+    private $endDateTime;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $CouponType;
+    private $couponType;
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
      */
-    private $CouponValue;
+    private $couponValue;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $CouponPercentOff;
+    private $couponPercentOff;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $IsActive;
+    private $isActive;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Cart::class, mappedBy="coupon")
+     */
+    private $carts;
+
+    public function __construct()
+    {
+        $this->carts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,84 +73,114 @@ class Coupon
 
     public function getCouponCode(): ?string
     {
-        return $this->coupon_code;
+        return $this->couponCode;
     }
 
     public function setCouponCode(string $coupon_code): self
     {
-        $this->coupon_code = $coupon_code;
+        $this->couponCode = $coupon_code;
 
         return $this;
     }
 
     public function getStartDateTime(): ?\DateTimeInterface
     {
-        return $this->StartDateTime;
+        return $this->startDateTime;
     }
 
     public function setStartDateTime(\DateTimeInterface $StartDateTime): self
     {
-        $this->StartDateTime = $StartDateTime;
+        $this->startDateTime = $StartDateTime;
 
         return $this;
     }
 
     public function getEndDateTime(): ?\DateTimeInterface
     {
-        return $this->EndDateTime;
+        return $this->endDateTime;
     }
 
     public function setEndDateTime(?\DateTimeInterface $EndDateTime): self
     {
-        $this->EndDateTime = $EndDateTime;
+        $this->endDateTime = $EndDateTime;
 
         return $this;
     }
 
     public function getCouponType(): ?string
     {
-        return $this->CouponType;
+        return $this->couponType;
     }
 
-    public function setCouponType(string $CouponType): self
+    public function setCouponType(string $couponType): self
     {
-        $this->CouponType = $CouponType;
+        $this->couponType = $couponType;
 
         return $this;
     }
 
     public function getCouponValue(): ?string
     {
-        return $this->CouponValue;
+        return $this->couponValue;
     }
 
-    public function setCouponValue(?string $CouponValue): self
+    public function setCouponValue(?string $couponValue): self
     {
-        $this->CouponValue = $CouponValue;
+        $this->couponValue = $couponValue;
 
         return $this;
     }
 
     public function getCouponPercentOff(): ?int
     {
-        return $this->CouponPercentOff;
+        return $this->couponPercentOff;
     }
 
-    public function setCouponPercentOff(?int $CouponPercentOff): self
+    public function setCouponPercentOff(?int $couponPercentOff): self
     {
-        $this->CouponPercentOff = $CouponPercentOff;
+        $this->couponPercentOff = $couponPercentOff;
 
         return $this;
     }
 
     public function getIsActive(): ?bool
     {
-        return $this->IsActive;
+        return $this->isActive;
     }
 
-    public function setIsActive(bool $IsActive): self
+    public function setIsActive(bool $isActive): self
     {
-        $this->IsActive = $IsActive;
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cart[]
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): self
+    {
+        if (! $this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setCoupon($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): self
+    {
+        if ($this->carts->removeElement($cart)) {
+            // set the owning side to null (unless already changed)
+            if ($cart->getCoupon() === $this) {
+                $cart->setCoupon(null);
+            }
+        }
 
         return $this;
     }

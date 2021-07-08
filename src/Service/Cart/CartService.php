@@ -23,7 +23,7 @@ class CartService implements CartInterface
 
     public function isEmpty(): bool
     {
-        if (empty($this->security->getUser()->getCart())) {
+        if (empty($this->getUserCartPayload())) {
             return true;
         }
 
@@ -36,7 +36,7 @@ class CartService implements CartInterface
             return [];
         }
 
-        return $this->security->getUser()->getCart()->getBooks();
+        return $this->getUserCartPayload()->getBooks();
     }
 
     public function subTotal()
@@ -63,9 +63,14 @@ class CartService implements CartInterface
 
         return $requestBookCollection->map(function ($bookCollection) use ($bookRepository) {
             return [
-              'quantity' => $bookCollection['quantity'],
-              'book' => $bookRepository->find($bookCollection['id']),
-           ];
+                'quantity' => $bookCollection['quantity'],
+                'book' => $bookRepository->find($bookCollection['id']),
+            ];
         });
+    }
+
+    public function getUserCartPayload()
+    {
+        return $this->security->getUser()->getCart();
     }
 }

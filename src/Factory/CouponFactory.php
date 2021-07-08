@@ -5,7 +5,6 @@ namespace App\Factory;
 use App\Entity\Coupon;
 use App\Enum\CouponType;
 use App\Repository\CouponRepository;
-use phpDocumentor\Reflection\Types\Self_;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -37,15 +36,18 @@ final class CouponFactory extends ModelFactory
 
     protected function getDefaults(): array
     {
-        $couponType= $this->generateCouponType();
+        $couponType = $this->generateCouponType();
+        $starting_date = self::faker()->dateTimeBetween('now', '+5 days', 'Asia/Kolkata');
+        $endDate = self::faker()->dateTimeBetween($starting_date, '+5 days', 'Asia/KolKata');
+
         return [
-            'coupon_code' => self::faker()->randomAscii(),
-            'start_date_time' => self::faker()->dateTime('now', 'Asia/Kolkata'),
-            'end_date_time' => self::faker()->dateTime('+5 days', 'Asia/Kolkata'),
+            'coupon_code' => self::faker()->isbn10(),
+            'start_date_time' => $starting_date,
+            'end_date_time' => $endDate,
             'coupon_type' => $couponType,
-            'coupon_value' => $couponType == CouponType::fixed ? self::faker()->numberBetween(900, 1500) :null,
-            'coupon_percent_off' => $couponType == CouponType::percent ? self::faker()->numberBetween(5, 10) :null,
-            'is_active'=> self::faker()->randomElement([True,False]),
+            'coupon_value' => CouponType::fixed == $couponType ? self::faker()->numberBetween(900, 1500) : null,
+            'coupon_percent_off' => CouponType::percent == $couponType ? self::faker()->numberBetween(5, 10) : null,
+            'is_active' => self::faker()->randomElement([true, false]),
         ];
     }
 

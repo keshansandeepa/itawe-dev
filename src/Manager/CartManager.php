@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\BookCart;
 use App\Entity\Cart;
+use App\Entity\Coupon;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CartManager
@@ -23,7 +24,7 @@ class CartManager
             $newCart = new Cart();
             $newCart->setUser($user);
             $this->entityManager->persist($newCart);
-
+            $this->entityManager->flush();
             return $newCart;
         }
         $this->entityManager->flush();
@@ -36,5 +37,10 @@ class CartManager
         $cart->removeBook($book);
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
+    }
+
+    public function addCouponCode(Cart $cart,Coupon $coupon)
+    {
+        $cart->setCoupon($coupon);
     }
 }

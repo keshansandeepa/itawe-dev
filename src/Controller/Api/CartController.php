@@ -8,6 +8,7 @@ use App\Manager\CartManager;
 use App\Repository\BookCartRepository;
 use App\Repository\BookRepository;
 use App\Service\Cart\CartService;
+use App\Service\Coupon\CouponService;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,8 +83,8 @@ class CartController extends BaseApiController
             $this->getDoctrine()->getConnection()->rollBack();
 
             return new Response(
-                $this->serializer->serialize(['message' => 'Error'], 'json'),
-                $exception->getCode(),
+                $this->serializer->serialize(['message' => $exception->getMessage()], 'json'),
+                500,
                 ['Content-type' => 'application/json']
             );
         }
@@ -151,7 +152,7 @@ class CartController extends BaseApiController
 
             return new Response(
                 $this->serializer->serialize(['message' => 'Error'], 'json'),
-                $exception->getCode(),
+                500,
                 ['Content-type' => 'application/json']
             );
         }
@@ -160,7 +161,16 @@ class CartController extends BaseApiController
     /**
      * @Route ("/api/cart/coupon", methods={"POST"})
      */
-    public function addCoupon()
+    public function addCoupon(Request $request, CouponService $couponService)
     {
+        try {
+            $couponService->redeem($request->toArray()['code'], $this->cartManager, $this->cartService);
+        } catch (Exception $exception) {
+            return new Response(
+                $this->serializer->serialize(['message' => $exception->getMessage()], 'json'),
+                0 == $exception->getCode() ? 500 : $exception->getCode(),
+                ['Content-type' => 'application/json']
+            );
+        }
     }
 }

@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Coupon;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +23,26 @@ class CouponRepository extends ServiceEntityRepository
         parent::__construct($registry, Coupon::class);
     }
 
-    // /**
-    //  * @return Coupon[] Returns an array of Coupon objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @throws QueryException
+     * @throws NonUniqueResultException
+     */
+    public function findRedeemableCouponCode($value)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Coupon
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('coupon')
+            ->addCriteria($this->redeemableCouponCriteria($value))
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function redeemableCouponCriteria($value): Criteria
+    {
+        return Criteria::create()
+            ->where(Criteria::expr()->lte('startDateTime', Carbon::now('Asia/Kolkata')->toDateTimeString()))
+            ->andWhere(Criteria::expr()->gt('endDateTime', Carbon::now('Asia/Kolkata')->toDateTimeString()))
+            ->andWhere(Criteria::expr()->eq('couponCode', $value))
+            ->andWhere(Criteria::expr()->eq('isActive', true))
+            ;
+    }
 }
