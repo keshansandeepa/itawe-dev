@@ -24,7 +24,7 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"show_book", "list_book"})
+     * @Groups({"show_book"})
      */
     private $id;
 
@@ -65,19 +65,18 @@ class Book
 
     /**
      * @ORM\Column(type="text", nullable=true, name="desktop_cover_image")
-     * @Groups({"show_book", "list_book"})
+     * @Groups({"show_book"})
      */
     private $desktopCoverImage;
 
     /**
      * @ORM\Column(type="text", nullable=true, name="mobile_cover_image")
-     * @Groups({"show_book", "list_book"})
+     * @Groups({"show_book"})
      */
     private $mobileCoverImage;
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     * @Groups({"show_book", "list_book"})
      */
     private $price;
 
@@ -199,16 +198,16 @@ class Book
 
     public function getPrice()
     {
-        return $this->price;
+        return new Money($this->price);
     }
 
-    /***
-     *
-     * @Groups({"show_book"})
+    /**
+     * @return string
+     * @Groups({"show_book", "list_book"})
      */
-    public function getFormattedBookPrice()
+    public function getPriceFormatted()
     {
-        return (new Money($this->getPrice()))->formatted();
+        return $this->getPrice()->formatted();
     }
 
     /**

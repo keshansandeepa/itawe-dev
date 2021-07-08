@@ -25,10 +25,10 @@ class BookController extends AbstractController
      */
     public function index(Request $request)
     {
-        $book = $this->bookRepository->findAllWithFilter($request->query->get('category'));
+        $books = $this->bookRepository->findAllWithFilter($request->query->get('category'));
 
         return new Response(
-            $this->serializer->serialize($book, 'json', ['groups' => 'show_book']),
+            $this->serializer->serialize($books, 'json', ['groups' => 'show_book']),
             Response::HTTP_OK,
             ['Content-type' => 'application/json']
         );
