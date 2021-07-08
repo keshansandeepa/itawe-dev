@@ -19,11 +19,6 @@ class BookCart
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne (targetEntity= Book::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $book;
 
     /**
      * @ORM\Column(type="integer")
@@ -36,27 +31,17 @@ class BookCart
     private $cart;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="cart")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $book;
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBook()
-    {
-        return $this->book;
-    }
-
-    /**
-     * @param mixed $book
-     */
-    public function setBook($book): void
-    {
-        $this->book = $book;
     }
 
     /**
@@ -134,6 +119,18 @@ class BookCart
     public function setCart(?Cart $cart): self
     {
         $this->cart = $cart;
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): self
+    {
+        $this->book = $book;
 
         return $this;
     }

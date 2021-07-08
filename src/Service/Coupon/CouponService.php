@@ -2,11 +2,13 @@
 
 namespace App\Service\Coupon;
 
+use App\Enum\CouponType;
 use App\Exception\InvalidCouponException;
 use App\Exception\RedeemedCouponException;
 use App\Manager\CartManager;
 use App\Repository\CouponRepository;
 use App\Service\Cart\CartService;
+use App\Service\Money;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\QueryException;
 use Symfony\Component\Security\Core\Security;
@@ -30,7 +32,7 @@ class CouponService
      */
     public function redeem(string $couponCode, CartManager $cartManager): bool
     {
-        if ($this->isCouponHasAlreadyRedeem()) {
+        if ($this->isCartCouponHasAlreadyRedeem()) {
             throw new RedeemedCouponException();
         }
         $validCoupon = $this->getValidCoupon($couponCode);
@@ -59,6 +61,8 @@ class CouponService
         return true;
     }
 
+
+
     /**
      * @throws QueryException
      * @throws NonUniqueResultException
@@ -68,7 +72,7 @@ class CouponService
         return $this->couponRepository->findRedeemableCouponCode($couponCode);
     }
 
-    protected function isCouponHasAlreadyRedeem(): bool
+    public function isCartCouponHasAlreadyRedeem(): bool
     {
         if (empty($this->security->getUser()->getCart()->getCoupon())) {
             return false;

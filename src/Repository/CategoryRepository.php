@@ -27,4 +27,17 @@ class CategoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getCategoryCount()
+    {
+        $RAW_QUERY = 'SELECT * FROM categories;';
+        $statement = $this->_em->getConnection()->prepare($RAW_QUERY);
+        $result = $statement->executeQuery();
+
+        return $result->rowCount();
+    }
 }

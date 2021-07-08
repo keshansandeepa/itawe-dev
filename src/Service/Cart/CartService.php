@@ -3,6 +3,8 @@
 namespace App\Service\Cart;
 
 use App\Repository\BookRepository;
+use App\Repository\CategoryRepository;
+use App\Service\Coupon\CouponServiceDetails;
 use App\Service\Money;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Security;
@@ -10,15 +12,22 @@ use Symfony\Component\Security\Core\Security;
 class CartService implements CartInterface
 {
     private Security $security;
+    private CategoryRepository $categoryRepository;
+    private CouponServiceDetails $couponServiceDetails;
 
-    public function __construct(Security $security)
-    {
+    public function __construct(
+        Security $security,
+        CategoryRepository $categoryRepository,
+        CouponServiceDetails $couponServiceDetails
+    ) {
         $this->security = $security;
+        $this->categoryRepository = $categoryRepository;
+        $this->couponServiceDetails = $couponServiceDetails;
     }
 
     public function total(): Money
     {
-        return $this->booksTotal();
+        return $this->subTotal();
     }
 
     public function isEmpty(): bool
@@ -41,7 +50,7 @@ class CartService implements CartInterface
 
     public function subTotal()
     {
-        return true;
+        return $this->calculateSubtotal($this->booksTotal());
     }
 
     public function booksTotal(): Money
@@ -72,5 +81,54 @@ class CartService implements CartInterface
     public function getUserCartPayload()
     {
         return $this->security->getUser()->getCart();
+    }
+
+    public function getCartDiscountTotal()
+    {
+        return $this->getCartDiscount(($this->booksTotal()))['appliedDiscountTotal'];
+    }
+
+    public function getCouponDetails()
+    {
+        return $this->calculateCartCouponDetails($this->booksTotal());
+    }
+
+    protected function calculateSubtotal($total)
+    {
+        if ($this->isCouponApplied()) {
+            return $this->calculateCartCouponDetails($total)['remainingTotal'];
+        }
+
+        return $this->getCartDiscount($total)['remainingTotal'];
+    }
+
+    protected function calculateCartCouponDetails($total)
+    {
+        if ($this->isCouponApplied()) {
+            return $this->couponServiceDetails->appliedCouponDetails($total);
+        }
+
+        return [
+            'appliedAmount' => new Money(0),
+            'couponCode' => null,
+            'remainingTotal' => $total,
+        ];
+    }
+
+    protected function getCartDiscount($total)
+    {
+        return (new CartDiscountService($this->categoryRepository))->apply($total, $this->books());
+    }
+
+    protected function isCouponApplied(): bool
+    {
+        if ($this->isEmpty()) {
+            return false;
+        }
+        if (empty($this->security->getUser()->getCart()->getCoupon())) {
+            return false;
+        }
+
+        return true;
     }
 }
