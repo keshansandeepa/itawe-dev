@@ -77,7 +77,6 @@ class Book
 
     /**
      * @ORM\Column(type="bigint", nullable=true)
-     *
      */
     private $price;
 
@@ -197,7 +196,6 @@ class Book
         return $this;
     }
 
-
     public function getPrice()
     {
         return new Money($this->price);
@@ -207,7 +205,6 @@ class Book
      * @return string
      * @Groups({"show_book", "list_book"})
      */
-
     public function getPriceFormatted()
     {
         return $this->getPrice()->formatted();

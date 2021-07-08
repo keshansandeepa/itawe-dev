@@ -20,7 +20,6 @@ class CategoryController extends AbstractController
     /**
      * @Route ("/api/categories", methods={"GET"})
      */
-
     public function index(CategoryRepository $categoryRepository)
     {
         return new Response(
