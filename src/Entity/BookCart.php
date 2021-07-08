@@ -85,7 +85,7 @@ class BookCart
      */
     public function getBookPriceFormatted()
     {
-        return (new Money($this->getBook()->getPrice()))->formatted();
+        return $this->getBookPrice()->formatted();
     }
 
     public function getBookPrice()
