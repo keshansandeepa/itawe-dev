@@ -14,6 +14,7 @@ class CartService implements CartInterface
     private Security $security;
     private CategoryRepository $categoryRepository;
     private CouponServiceDetails $couponServiceDetails;
+    public bool $isUserCartEmpty;
 
     public function __construct(
         Security $security,
@@ -33,8 +34,11 @@ class CartService implements CartInterface
     public function isEmpty(): bool
     {
         if (empty($this->getUserCartPayload())) {
+            $this->isUserCartEmpty = true;
+
             return true;
         }
+        $this->isUserCartEmpty = false;
 
         return false;
     }
@@ -56,7 +60,7 @@ class CartService implements CartInterface
     public function booksTotal(): Money
     {
         $price = new Money(0);
-        if ($this->isEmpty()) {
+        if ($this->isUserCartEmpty) {
             return $price;
         }
         $this->books()->map(function ($item) use (&$price) {
@@ -85,6 +89,10 @@ class CartService implements CartInterface
 
     public function getCartDiscountTotal()
     {
+        if ($this->isUserCartEmpty) {
+            return new Money(0);
+        }
+
         return $this->getCartDiscount(($this->booksTotal()))['appliedDiscountTotal'];
     }
 
@@ -95,6 +103,9 @@ class CartService implements CartInterface
 
     protected function calculateSubtotal($total)
     {
+        if ($this->isUserCartEmpty) {
+            return new Money(0);
+        }
         if ($this->isCouponApplied()) {
             return $this->calculateCartCouponDetails($total)['remainingTotal'];
         }
@@ -122,7 +133,7 @@ class CartService implements CartInterface
 
     protected function isCouponApplied(): bool
     {
-        if ($this->isEmpty()) {
+        if ($this->isUserCartEmpty) {
             return false;
         }
         if (empty($this->security->getUser()->getCart()->getCoupon())) {
