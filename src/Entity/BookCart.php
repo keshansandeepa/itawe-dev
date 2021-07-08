@@ -90,7 +90,7 @@ class BookCart
 
     public function getBookPrice()
     {
-        return new Money($this->getBook()->getPrice());
+        return $this->getBook()->getPrice();
     }
 
     /**
