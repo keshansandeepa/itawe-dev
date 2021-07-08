@@ -198,35 +198,6 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
                 'quantity' => 10,
             ],
 
-            [
-                'title' => 'The Bomber Mafia: A Dream, a Temptation, and the Longest Night of the Second World War',
-                'slug' => 'The Bomber Mafia: A Dream, a Temptation, and the Longest Night of the Second World War',
-                'description' => <<<EOF
-                 In The Bomber Mafia: A Dream, a Temptation, and the Longest Night of the Second World War, Malcolm Gladwell, author of New York Times best sellers including Talking to Strangers and host of the podcast Revisionist History, uses original interviews, archival footage, and his trademark insight to weave together the stories of a Dutch genius and his homemade computer, a band of brothers in central Alabama, a British psychopath, and pyromaniacal chemists at Harvard. As listeners hear these stories unfurl, Gladwell examines one of the greatest moral challenges in modern American history.
-                EOF,
-                'publication_date' => new \DateTime('2021-04-27'),
-                'price' => '1884.28',
-                'category' => 'History',
-                'author' => 'Malcolm Gladwell',
-                'desktop_cover_image' => '/images/bombermafia.jpeg',
-                'mobile_cover_image' => '/images/bombermafia.jpeg',
-                'quantity' => 10,
-            ],
-
-            [
-                'title' => 'A Promised Land',
-                'slug' => 'A Promised Land',
-                'description' => <<<EOF
-                 A riveting, deeply personal account of history in the making - from the president who inspired us to believe in the power of democracy NUMBER ONE NEW YORK TIMES BESTSELLER NAACP IMAGE AWARD NOMINEE NAMED ONE OF THE TEN BEST BOOKS OF THE YEAR BY THE NEW YORK TIMES BOOK REVIEW
-                EOF,
-                'publication_date' => new \DateTime('2020-12-08'),
-                'price' => '1884.28',
-                'category' => 'History',
-                'author' => 'Barack Obama',
-                'desktop_cover_image' => '/images/promiseland.jpeg',
-                'mobile_cover_image' => '/images/promiseland.jpeg',
-                'quantity' => 10,
-            ],
         ];
     }
 

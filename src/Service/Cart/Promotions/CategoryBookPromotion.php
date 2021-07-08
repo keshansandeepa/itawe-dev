@@ -36,8 +36,11 @@ class CategoryBookPromotion implements PromotionInterface
             ];
         }
 
+        $totalPrice = new Money($this->total->amount());
+
         $appliedAmount = $this->total->multiply('5')->divide('100');
-        $remainingTotalPrice = $this->total->subtract($appliedAmount);
+
+        $remainingTotalPrice = $totalPrice->subtract($appliedAmount);
 
         if (-1 == gmp_sign($remainingTotalPrice->amount()) || 0 == gmp_sign($remainingTotalPrice->amount())) {
             return [
@@ -85,7 +88,7 @@ class CategoryBookPromotion implements PromotionInterface
         }
 
         $collectionCategory = $categoryCountCollection->filter(function ($category) {
-            if ($category > 10) {
+            if ($category >= 10) {
                 return $category;
             }
         });
