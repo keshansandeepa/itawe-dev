@@ -34,6 +34,11 @@ class Cart
      */
     private $books;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Coupon::class, inversedBy="carts")
+     */
+    private $coupon;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
@@ -82,6 +87,18 @@ class Cart
                 $book->setCart(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCoupon(): ?Coupon
+    {
+        return $this->coupon;
+    }
+
+    public function setCoupon(?Coupon $coupon): self
+    {
+        $this->coupon = $coupon;
 
         return $this;
     }

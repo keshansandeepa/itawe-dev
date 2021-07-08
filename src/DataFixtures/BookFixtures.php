@@ -221,7 +221,7 @@ class BookFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            AuthorFixture::class,
+            AuthorFixtures::class,
             CategoryFixtures::class,
         ];
     }

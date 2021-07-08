@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class AuthorFixture extends Fixture
+class AuthorFixtures extends Fixture
 {
     private SluggerInterface $slugger;
 

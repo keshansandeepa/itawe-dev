@@ -4,6 +4,7 @@ namespace App\Manager;
 
 use App\Entity\BookCart;
 use App\Entity\Cart;
+use App\Entity\Coupon;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CartManager
@@ -15,6 +16,9 @@ class CartManager
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param $user
+     */
     public function findOrAddUserCart($user): Cart
     {
         $userCart = $user->getCart();
@@ -23,6 +27,7 @@ class CartManager
             $newCart = new Cart();
             $newCart->setUser($user);
             $this->entityManager->persist($newCart);
+            $this->entityManager->flush();
 
             return $newCart;
         }
@@ -34,6 +39,20 @@ class CartManager
     public function deleteBook(Cart $cart, BookCart $book)
     {
         $cart->removeBook($book);
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
+    }
+
+    public function addCouponCode(Cart $cart, Coupon $coupon)
+    {
+        $cart->setCoupon($coupon);
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
+    }
+
+    public function removeCouponCode(Cart $cart, Coupon $coupon)
+    {
+        $coupon->removeCart($cart);
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
