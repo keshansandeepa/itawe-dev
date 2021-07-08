@@ -32,4 +32,18 @@ class BookRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findAllWithFilter($filter = '')
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if ($filter) {
+            $qb->andWhere('f.category = :filter');
+            $qb->setParameter('filter', $filter);
+        }
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }
