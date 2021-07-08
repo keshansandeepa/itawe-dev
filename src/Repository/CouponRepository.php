@@ -55,7 +55,7 @@ class CouponRepository extends ServiceEntityRepository
     public function redeemableCouponCriteria($value): Criteria
     {
         return Criteria::create()
-            ->where(Criteria::expr()->lte('startDateTime', Carbon::now('Asia/Kolkata')->toDateTimeString()))
+            ->where(Criteria::expr()->eq('startDateTime', Carbon::now('Asia/Kolkata')->toDateTimeString()))
             ->andWhere(Criteria::expr()->gt('endDateTime', Carbon::now('Asia/Kolkata')->toDateTimeString()))
             ->andWhere(Criteria::expr()->eq('couponCode', $value))
             ->andWhere(Criteria::expr()->eq('isActive', true))
