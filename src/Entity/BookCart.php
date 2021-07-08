@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Service\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -85,7 +84,7 @@ class BookCart
      */
     public function getBookPriceFormatted()
     {
-        return (new Money($this->getBook()->getPrice()))->formatted();
+        return $this->getBookPrice()->formatted();
     }
 
     public function getBookPrice()

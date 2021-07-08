@@ -46,7 +46,7 @@ final class CouponFactory extends ModelFactory
             'end_date_time' => $endDate,
             'coupon_type' => $couponType,
             'coupon_value' => CouponType::fixed == $couponType ? self::faker()->numberBetween(900, 1500) : null,
-            'coupon_percent_off' => CouponType::percent == $couponType ? self::faker()->numberBetween(5, 10) : null,
+            'coupon_percent_off' => CouponType::percent == $couponType ? 15 : null,
             'is_active' => self::faker()->randomElement([true, false]),
         ];
     }
@@ -66,6 +66,6 @@ final class CouponFactory extends ModelFactory
 
     protected function generateCouponType()
     {
-        return self::faker()->randomElement([CouponType::fixed, CouponType::percent]);
+        return self::faker()->randomElement([CouponType::percent]);
     }
 }
