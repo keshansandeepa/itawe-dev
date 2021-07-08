@@ -115,9 +115,6 @@ class Coupon
         $this->endDate = $endDate;
     }
 
-
-
-
     public function getCouponType(): ?string
     {
         return $this->couponType;
