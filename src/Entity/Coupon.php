@@ -34,7 +34,7 @@ class Coupon
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $endDateTime;
+    private $endDate;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -102,18 +102,21 @@ class Coupon
     /**
      * @return mixed
      */
-    public function getEndDateTime()
+    public function getEndDate()
     {
-        return $this->endDateTime;
+        return $this->endDate;
     }
 
     /**
-     * @param mixed $endDateTime
+     * @param mixed $endDate
      */
-    public function setEndDateTime($endDateTime): void
+    public function setEndDate($endDate): void
     {
-        $this->endDateTime = $endDateTime;
+        $this->endDate = $endDate;
     }
+
+
+
 
     public function getCouponType(): ?string
     {
