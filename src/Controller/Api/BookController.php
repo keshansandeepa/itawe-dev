@@ -3,11 +3,12 @@
 namespace App\Controller\Api;
 
 use App\Repository\BookRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class BookController extends BaseApiController
+class BookController extends AbstractController
 {
     private BookRepository $bookRepository;
     private SerializerInterface $serializer;
@@ -40,7 +41,11 @@ class BookController extends BaseApiController
         $book = $this->bookRepository->find($id);
 
         if (empty($book)) {
-            return $this->notFoundJsonResponse('Book');
+            return new Response(
+                $this->serializer->serialize(['message' => 'Not Found Error'], 'json'),
+                200,
+                ['Content-type' => 'application/json']
+            );
         }
 
         return new Response(
