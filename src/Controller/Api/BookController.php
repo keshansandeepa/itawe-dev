@@ -3,7 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Repository\BookRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,12 +25,7 @@ class BookController extends AbstractController
      */
     public function index(Request $request)
     {
-
         $books = $this->bookRepository->findAllWithFilter($request->query->get('category'));
-//         $newArrayCollection = new ArrayCollection($books);
-//         $newArrayCollection->map(function ($book) {
-//             dd($book);
-//         });
 
         return new Response(
             $this->serializer->serialize($books, 'json', ['groups' => 'show_book']),
