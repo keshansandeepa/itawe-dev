@@ -256,7 +256,7 @@ class Book
 
     public function addCart(BookCart $cart): self
     {
-        if (!$this->cart->contains($cart)) {
+        if (! $this->cart->contains($cart)) {
             $this->cart[] = $cart;
             $cart->setBook($this);
         }

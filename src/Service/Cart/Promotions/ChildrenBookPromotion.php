@@ -43,7 +43,6 @@ class ChildrenBookPromotion implements PromotionInterface
 
     private function appliedAmount($filterBooks): array
     {
-
         $books_total_price = new Money(0);
         $filterBooks->map(function ($book) use (&$books_total_price) {
             return $books_total_price->add($book->getTotalPrice());
@@ -68,7 +67,6 @@ class ChildrenBookPromotion implements PromotionInterface
             'discountName' => '10% discount When you purchase 5 children books',
             'remainingPrice' => $remainingTotal,
         ];
-
     }
 
     private function checkPromotionCanApply($filterBooks): bool

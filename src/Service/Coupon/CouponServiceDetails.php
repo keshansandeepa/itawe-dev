@@ -24,7 +24,6 @@ class CouponServiceDetails
      */
     public function appliedCouponDetails(Money $total)
     {
-
         $userCoupon = $this->security->getUser()->getCart()->getCoupon();
         if (CouponType::percent == $userCoupon->getCouponType()) {
             $couponCodePercentOff = $userCoupon->getCouponPercentOff();
@@ -45,9 +44,5 @@ class CouponServiceDetails
                 'remainingTotal' => $remainingTotal,
             ];
         }
-
-
-
-
     }
 }

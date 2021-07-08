@@ -2,13 +2,11 @@
 
 namespace App\Service\Coupon;
 
-use App\Enum\CouponType;
 use App\Exception\InvalidCouponException;
 use App\Exception\RedeemedCouponException;
 use App\Manager\CartManager;
 use App\Repository\CouponRepository;
 use App\Service\Cart\CartService;
-use App\Service\Money;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\QueryException;
 use Symfony\Component\Security\Core\Security;
@@ -60,8 +58,6 @@ class CouponService
 
         return true;
     }
-
-
 
     /**
      * @throws QueryException

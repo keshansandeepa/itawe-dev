@@ -19,7 +19,6 @@ class BookCart
      */
     private $id;
 
-
     /**
      * @ORM\Column(type="integer")
      */

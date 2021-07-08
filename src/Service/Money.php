@@ -56,8 +56,10 @@ class Money
     public function divide($money)
     {
         $this->money = $this->money->divide($money);
+
         return $this;
     }
+
     public function instance()
     {
         return $this->money;
