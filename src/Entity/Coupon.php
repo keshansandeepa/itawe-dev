@@ -27,12 +27,12 @@ class Coupon
     private $couponCode;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
-    private $startDateTime;
+    private $startDate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDateTime;
 
@@ -83,28 +83,36 @@ class Coupon
         return $this;
     }
 
-    public function getStartDateTime(): ?\DateTimeInterface
+    /**
+     * @return mixed
+     */
+    public function getStartDate()
     {
-        return $this->startDateTime;
+        return $this->startDate;
     }
 
-    public function setStartDateTime(\DateTimeInterface $StartDateTime): self
+    /**
+     * @param mixed $startDate
+     */
+    public function setStartDate($startDate): void
     {
-        $this->startDateTime = $StartDateTime;
-
-        return $this;
+        $this->startDate = $startDate;
     }
 
-    public function getEndDateTime(): ?\DateTimeInterface
+    /**
+     * @return mixed
+     */
+    public function getEndDateTime()
     {
         return $this->endDateTime;
     }
 
-    public function setEndDateTime(?\DateTimeInterface $EndDateTime): self
+    /**
+     * @param mixed $endDateTime
+     */
+    public function setEndDateTime($endDateTime): void
     {
-        $this->endDateTime = $EndDateTime;
-
-        return $this;
+        $this->endDateTime = $endDateTime;
     }
 
     public function getCouponType(): ?string
