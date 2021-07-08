@@ -1,9 +1,9 @@
 <?php
 
-
 namespace App\Exception;
 
 use Exception;
+
 class RedeemedCouponException extends Exception
 {
     protected $message = 'Your cart already redeem a coupon code';
@@ -18,5 +18,4 @@ class RedeemedCouponException extends Exception
     {
         return $this->message;
     }
-
 }

@@ -50,7 +50,6 @@ class CouponService
      */
     public function removeCoupon(string $couponCode, CartManager $cartManager): bool
     {
-
         $coupon = $this->couponRepository->findByCodeExistInCart($couponCode, $this->security->getUser()->getCart()->getId());
         if (empty($coupon)) {
             throw new InvalidCouponException();

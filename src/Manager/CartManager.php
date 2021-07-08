@@ -18,7 +18,6 @@ class CartManager
 
     /**
      * @param $user
-     * @return Cart
      */
     public function findOrAddUserCart($user): Cart
     {
@@ -37,10 +36,6 @@ class CartManager
         return $userCart;
     }
 
-    /**
-     * @param Cart $cart
-     * @param BookCart $book
-     */
     public function deleteBook(Cart $cart, BookCart $book)
     {
         $cart->removeBook($book);
@@ -48,10 +43,6 @@ class CartManager
         $this->entityManager->flush();
     }
 
-    /**
-     * @param Cart $cart
-     * @param Coupon $coupon
-     */
     public function addCouponCode(Cart $cart, Coupon $coupon)
     {
         $cart->setCoupon($coupon);
@@ -59,10 +50,6 @@ class CartManager
         $this->entityManager->flush();
     }
 
-    /**
-     * @param Cart $cart
-     * @param Coupon $coupon
-     */
     public function removeCouponCode(Cart $cart, Coupon $coupon)
     {
         $coupon->removeCart($cart);

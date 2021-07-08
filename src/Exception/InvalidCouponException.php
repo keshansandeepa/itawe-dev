@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Exception;
+
 use Exception;
+
 class InvalidCouponException extends Exception
 {
     protected $message = 'Invalid coupon code';
@@ -16,5 +18,4 @@ class InvalidCouponException extends Exception
     {
         return $this->message;
     }
-
 }

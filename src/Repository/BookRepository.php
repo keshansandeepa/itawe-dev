@@ -32,5 +32,4 @@ class BookRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
 }

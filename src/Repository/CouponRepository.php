@@ -41,7 +41,6 @@ class CouponRepository extends ServiceEntityRepository
      */
     public function findByCodeExistInCart($code, $cartId)
     {
-
         return $this->createQueryBuilder('coupon')
             ->andWhere('coupon.couponCode = :code')
             ->leftJoin('coupon.carts', 'cart_coupon')

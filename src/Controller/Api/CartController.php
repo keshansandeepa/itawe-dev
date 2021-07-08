@@ -195,6 +195,7 @@ class CartController extends BaseApiController
         try {
             $couponService->removeCoupon($id, $this->cartManager);
             $this->getDoctrine()->getConnection()->commit();
+
             return new Response(
                 $this->serializer->serialize(['message' => 'Coupon removed successfully'], 'json'),
                 200,
