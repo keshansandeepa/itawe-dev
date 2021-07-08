@@ -208,7 +208,6 @@ class Book
      */
     public function getFormattedBookPrice()
     {
-
         return (new Money($this->getPrice()))->formatted();
     }
 
