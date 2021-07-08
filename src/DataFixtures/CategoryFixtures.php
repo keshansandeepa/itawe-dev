@@ -3,17 +3,17 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use Cocur\Slugify\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryFixtures extends Fixture
 {
-    private SluggerInterface $slugger;
+    private Slugify $slugger;
 
-    public function __construct(SluggerInterface $slugger)
+    public function __construct()
     {
-        $this->slugger = $slugger;
+        $this->slugger = new Slugify();
     }
 
     public function load(ObjectManager $manager)
@@ -21,7 +21,7 @@ class CategoryFixtures extends Fixture
         foreach ($this->dataObject() as $key => $value) {
             $category = new Category();
             $category->setName($key);
-            $category->setSlug($this->slugger->slug($key)->toString());
+            $category->setSlug($this->slugger->slugify($key));
             $category->setPosition($value);
             $manager->persist($category);
 

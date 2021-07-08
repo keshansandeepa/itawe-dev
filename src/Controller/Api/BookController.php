@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -22,9 +23,9 @@ class BookController extends AbstractController
     /**
      * @Route ("/api/books")
      */
-    public function index()
+    public function index(Request $request)
     {
-        $book = $this->bookRepository->findAll();
+        $book = $this->bookRepository->findAllWithFilter($request->query->get('category'));
 
         return new Response(
             $this->serializer->serialize($book, 'json', ['groups' => 'show_book']),

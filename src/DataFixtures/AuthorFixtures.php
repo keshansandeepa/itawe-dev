@@ -3,17 +3,17 @@
 namespace App\DataFixtures;
 
 use App\Entity\Author;
+use Cocur\Slugify\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AuthorFixtures extends Fixture
 {
-    private SluggerInterface $slugger;
+    private Slugify $slugger;
 
-    public function __construct(SluggerInterface $slugger)
+    public function __construct()
     {
-        $this->slugger = $slugger;
+        $this->slugger = new Slugify();
     }
 
     public function load(ObjectManager $manager)
@@ -21,7 +21,7 @@ class AuthorFixtures extends Fixture
         foreach ($this->authors() as $author) {
             $category = new Author();
             $category->setName($author);
-            $category->setSlug($this->slugger->slug($author)->toString());
+            $category->setSlug($this->slugger->slugify($author));
             $manager->persist($category);
         }
         $manager->flush();
