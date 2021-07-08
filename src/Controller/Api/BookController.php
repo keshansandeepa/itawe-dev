@@ -25,7 +25,6 @@ class BookController extends AbstractController
      */
     public function index(Request $request)
     {
-
         $book = $this->bookRepository->findAllWithFilter($request->query->get('category'));
 
         return new Response(
