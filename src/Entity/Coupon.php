@@ -76,9 +76,9 @@ class Coupon
         return $this->couponCode;
     }
 
-    public function setCouponCode(string $coupon_code): self
+    public function setCouponCode(string $couponCode): self
     {
-        $this->couponCode = $coupon_code;
+        $this->couponCode = $couponCode;
 
         return $this;
     }

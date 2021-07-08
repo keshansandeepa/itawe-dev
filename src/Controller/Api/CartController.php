@@ -161,11 +161,48 @@ class CartController extends BaseApiController
     /**
      * @Route ("/api/cart/coupon", methods={"POST"})
      */
-    public function addCoupon(Request $request, CouponService $couponService)
+    public function addCoupon(Request $request, CouponService $couponService): Response
     {
+        $this->getDoctrine()->getConnection()->beginTransaction();
+
         try {
-            $couponService->redeem($request->toArray()['code'], $this->cartManager, $this->cartService);
+            $couponService->redeem($request->toArray()['code'], $this->cartManager);
+            $this->getDoctrine()->getConnection()->commit();
+
+            return new Response(
+                $this->serializer->serialize(['message' => 'Coupon redeemed successfully'], 'json'),
+                200,
+                ['Content-type' => 'application/json']
+            );
         } catch (Exception $exception) {
+            $this->getDoctrine()->getConnection()->rollBack();
+
+            return new Response(
+                $this->serializer->serialize(['message' => $exception->getMessage()], 'json'),
+                0 == $exception->getCode() ? 500 : $exception->getCode(),
+                ['Content-type' => 'application/json']
+            );
+        }
+    }
+
+    /**
+     * @Route ("/api/cart/coupon/{id}", methods={"DELETE"})
+     */
+    public function deleteCoupon(Request $request, $id, CouponService $couponService): Response
+    {
+        $this->getDoctrine()->getConnection()->beginTransaction();
+
+        try {
+            $couponService->removeCoupon($id, $this->cartManager);
+            $this->getDoctrine()->getConnection()->commit();
+            return new Response(
+                $this->serializer->serialize(['message' => 'Coupon removed successfully'], 'json'),
+                200,
+                ['Content-type' => 'application/json']
+            );
+        } catch (Exception $exception) {
+            $this->getDoctrine()->getConnection()->rollBack();
+
             return new Response(
                 $this->serializer->serialize(['message' => $exception->getMessage()], 'json'),
                 0 == $exception->getCode() ? 500 : $exception->getCode(),

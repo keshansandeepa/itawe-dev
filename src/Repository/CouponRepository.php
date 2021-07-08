@@ -36,6 +36,23 @@ class CouponRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByCodeExistInCart($code, $cartId)
+    {
+
+        return $this->createQueryBuilder('coupon')
+            ->andWhere('coupon.couponCode = :code')
+            ->leftJoin('coupon.carts', 'cart_coupon')
+            ->andWhere('cart_coupon.id = :cartId')
+            ->setParameter('code', $code)
+            ->setParameter('cartId', $cartId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     public function redeemableCouponCriteria($value): Criteria
     {
         return Criteria::create()
