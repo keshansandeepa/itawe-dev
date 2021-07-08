@@ -90,9 +90,15 @@ class Book
      */
     private $category;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BookCart::class, mappedBy="book", orphanRemoval=true)
+     */
+    private $cart;
+
     public function __construct()
     {
         $this->authors = new ArrayCollection();
+        $this->cart = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,6 +242,36 @@ class Book
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BookCart[]
+     */
+    public function getCart(): Collection
+    {
+        return $this->cart;
+    }
+
+    public function addCart(BookCart $cart): self
+    {
+        if (! $this->cart->contains($cart)) {
+            $this->cart[] = $cart;
+            $cart->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(BookCart $cart): self
+    {
+        if ($this->cart->removeElement($cart)) {
+            // set the owning side to null (unless already changed)
+            if ($cart->getBook() === $this) {
+                $cart->setBook(null);
+            }
+        }
 
         return $this;
     }

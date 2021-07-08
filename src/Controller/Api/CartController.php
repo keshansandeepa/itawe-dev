@@ -46,7 +46,11 @@ class CartController extends BaseApiController
             'books' => $this->cartService->books(),
             'meta' => [
                 'empty' => $this->cartService->isEmpty(),
-                'subtotal' => $this->cartService->subTotal(),
+                'itemsTotalPrice' => $this->cartService->booksTotal()->formatted(),
+                'discountTotal' => $this->cartService->getCartDiscountTotal()->formatted(),
+                'couponCode' => $this->cartService->getCouponDetails()['couponCode'],
+                'appliedCouponTotal' => $this->cartService->getCouponDetails()['appliedAmount']->formatted(),
+                'subtotal' => $this->cartService->subTotal()->formatted(),
                 'totalPrice' => $this->cartService->total()->formatted(),
             ],
         ];
