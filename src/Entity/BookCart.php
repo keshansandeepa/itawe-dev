@@ -93,6 +93,14 @@ class BookCart
     }
 
     /**
+     * @Groups({"cart:index"})
+     */
+    public function getBookCover(): ?string
+    {
+        return $this->getBook()->getDesktopCoverImage();
+    }
+
+    /**
      * @return bool|string
      * @Groups({"cart:index"})
      */
