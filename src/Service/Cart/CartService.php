@@ -2,8 +2,10 @@
 
 namespace App\Service\Cart;
 
+use App\Entity\Cart;
 use App\Repository\BookRepository;
 use App\Repository\CategoryRepository;
+use App\Service\Coupon\CartCouponDetails;
 use App\Service\Coupon\CouponServiceDetails;
 use App\Service\Money;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,9 +32,9 @@ class CartService implements CartInterface
      * @return Money
      *               Total
      */
-    public function total(): Money
+    public function getTotal(): Money
     {
-        return $this->subTotal();
+        return $this->getSubTotal();
     }
 
     /**
@@ -51,10 +53,7 @@ class CartService implements CartInterface
         return false;
     }
 
-    /**
-     * @return array
-     */
-    public function books()
+    public function getBooks()
     {
         if ($this->isEmpty()) {
             return [];
@@ -63,18 +62,18 @@ class CartService implements CartInterface
         return $this->getUserCartPayload()->getBooks();
     }
 
-    public function subTotal()
+    public function getSubTotal(): Money
     {
-        return $this->calculateSubtotal($this->booksTotal());
+        return $this->calculateSubtotal($this->getBooksTotal());
     }
 
-    public function booksTotal(): Money
+    public function getBooksTotal(): Money
     {
         $price = new Money(0);
         if ($this->isUserCartEmpty) {
             return $price;
         }
-        $this->books()->map(function ($item) use (&$price) {
+        $this->getBooks()->map(function ($item) use (&$price) {
             $price->add($item->getTotalPrice());
         });
 
@@ -93,58 +92,55 @@ class CartService implements CartInterface
         });
     }
 
-    public function getUserCartPayload()
+    public function getUserCartPayload(): Cart
     {
         return $this->security->getUser()->getCart();
     }
 
-    public function getCartDiscountTotal()
+    public function getCartDiscountTotal(): Money
     {
         if ($this->isUserCartEmpty) {
             return new Money(0);
         }
 
-        return $this->getCartDiscount(($this->booksTotal()))['appliedDiscountTotal'];
+        return $this->getCartDiscount(($this->getBooksTotal()))['appliedDiscountTotal'];
     }
 
-    public function getCouponDetails()
+    public function getCouponDetails(): CartCouponDetails
     {
-        return $this->calculateCartCouponDetails($this->booksTotal());
-    }
-
-    protected function calculateSubtotal($total)
-    {
-        if ($this->isUserCartEmpty) {
-            return new Money(0);
-        }
         if ($this->isCouponApplied()) {
-            return $this->calculateCartCouponDetails($total)['remainingTotal'];
+            return $this->calculateCartCouponDetails($this->getBooksTotal());
+        }
+
+        return new CartCouponDetails(new Money(0), '', new Money(0));
+    }
+
+    protected function calculateSubtotal(Money $total): Money
+    {
+        if ($this->isUserCartEmpty) {
+            return new Money(0);
+        }
+
+        if ($this->isCouponApplied()) {
+            return $this->calculateCartCouponDetails($total)->getRemainingTotal();
         }
 
         return $this->getCartDiscount($total)['remainingTotal'];
     }
 
-    protected function calculateCartCouponDetails($total)
+    protected function calculateCartCouponDetails($total): CartCouponDetails
     {
-        if ($this->isCouponApplied()) {
-            return $this->couponServiceDetails->appliedCouponDetails($total);
-        }
-
-        return [
-            'appliedAmount' => new Money(0),
-            'couponCode' => null,
-            'remainingTotal' => $total,
-        ];
+        return $this->couponServiceDetails->appliedCouponDetails($total);
     }
 
-    protected function getCartDiscount($total)
+    protected function getCartDiscount($total): array
     {
-        return (new CartDiscountService($this->categoryRepository))->apply($total, $this->books());
+        return (new CartDiscountService($this->categoryRepository))->apply($total, $this->getBooks());
     }
 
     protected function isCouponApplied(): bool
     {
-        if ($this->isUserCartEmpty) {
+        if (empty($this->security->getUser()->getCart())) {
             return false;
         }
         if (empty($this->security->getUser()->getCart()->getCoupon())) {

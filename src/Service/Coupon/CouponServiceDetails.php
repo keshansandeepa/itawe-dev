@@ -3,6 +3,7 @@
 namespace App\Service\Coupon;
 
 use App\Enum\CouponType;
+use App\Service\Coupon\CartCouponDetails;
 use App\Service\Money;
 use Symfony\Component\Security\Core\Security;
 
@@ -16,15 +17,12 @@ class CouponServiceDetails
     }
 
     /**
-     * @param $total
-     *
-     * @return string[]
-     *
      * @todo logic for FIXED type
      */
-    public function appliedCouponDetails(Money $total)
+    public function appliedCouponDetails(Money $total): CartCouponDetails
     {
         $userCoupon = $this->security->getUser()->getCart()->getCoupon();
+
         if (CouponType::percent == $userCoupon->getCouponType()) {
             $couponCodePercentOff = $userCoupon->getCouponPercentOff();
             $oldTotal = new Money($total->amount());
@@ -32,18 +30,12 @@ class CouponServiceDetails
             $remainingTotal = $oldTotal->subtract($appliedAmount);
 
             if (0 == gmp_sign($remainingTotal->amount()) || -1 == gmp_sign($remainingTotal->amount())) {
-                return [
-                    'appliedAmount' => $appliedAmount,
-                    'couponCode' => $userCoupon->getCouponCode(),
-                    'remainingTotal' => new Money(0),
-                ];
+                return new CartCouponDetails($appliedAmount, $userCoupon->getCouponCode(), new Money(0));
             }
 
-            return [
-                'appliedAmount' => $appliedAmount,
-                'couponCode' => $userCoupon->getCouponCode(),
-                'remainingTotal' => $remainingTotal,
-            ];
+            return new CartCouponDetails($appliedAmount, $userCoupon->getCouponCode(), $remainingTotal);
         }
     }
+
+
 }

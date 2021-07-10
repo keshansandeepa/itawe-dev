@@ -6,15 +6,15 @@ use App\Repository\BookRepository;
 
 interface CartInterface
 {
-    public function books();
+    public function getBooks();
 
-    public function total();
+    public function getTotal();
 
     public function isEmpty();
 
-    public function subTotal();
+    public function getSubTotal();
 
-    public function booksTotal();
+    public function getBooksTotal();
 
     public function getStorePayload(array $books, BookRepository $bookRepository);
 }

@@ -43,16 +43,18 @@ class CartController extends AbstractController
      */
     public function index(): Response
     {
+
+
         $data = [
-            'books' => $this->cartService->books(),
+            'books' => $this->cartService->getBooks(),
             'meta' => [
                 'empty' => $this->cartService->isEmpty(),
-                'itemsTotalPrice' => $this->cartService->booksTotal()->formatted(),
+                'itemsTotalPrice' => $this->cartService->getBooksTotal()->formatted(),
                 'discountTotal' => $this->cartService->getCartDiscountTotal()->formatted(),
-                'couponCode' => $this->cartService->getCouponDetails()['couponCode'],
-                'appliedCouponTotal' => $this->cartService->getCouponDetails()['appliedAmount']->formatted(),
-                'subtotal' => $this->cartService->subTotal()->formatted(),
-                'totalPrice' => $this->cartService->total()->formatted(),
+                'couponCode' => $this->cartService->getCouponDetails()->getCouponCode(),
+                'appliedCouponTotal' => $this->cartService->getCouponDetails()->getAppliedAmount()->formatted(),
+                'subtotal' => $this->cartService->getSubTotal()->formatted(),
+                'totalPrice' => $this->cartService->getTotal()->formatted(),
             ],
         ];
 
