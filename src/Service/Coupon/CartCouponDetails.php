@@ -31,5 +31,4 @@ class CartCouponDetails
     {
         return $this->remainingTotal;
     }
-
 }

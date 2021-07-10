@@ -4,9 +4,8 @@ namespace App\Service\Cart;
 
 use App\Entity\Cart;
 use App\Repository\BookRepository;
-use App\Repository\CategoryRepository;
 use App\Service\Coupon\CartCouponDetails;
-use App\Service\Coupon\CouponServiceDetails;
+use App\Service\Coupon\CouponService;
 use App\Service\Money;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Security;
@@ -14,18 +13,18 @@ use Symfony\Component\Security\Core\Security;
 class CartService implements CartInterface
 {
     private Security $security;
-    private CategoryRepository $categoryRepository;
-    private CouponServiceDetails $couponServiceDetails;
+    private CartDiscountService $cartDiscountService;
     public bool $isUserCartEmpty;
+    private CouponService $couponService;
 
     public function __construct(
         Security $security,
-        CategoryRepository $categoryRepository,
-        CouponServiceDetails $couponServiceDetails
+        CouponService $couponService,
+        CartDiscountService $cartDiscountService
     ) {
         $this->security = $security;
-        $this->categoryRepository = $categoryRepository;
-        $this->couponServiceDetails = $couponServiceDetails;
+        $this->couponService = $couponService;
+        $this->cartDiscountService = $cartDiscountService;
     }
 
     /**
@@ -130,12 +129,12 @@ class CartService implements CartInterface
 
     protected function calculateCartCouponDetails($total): CartCouponDetails
     {
-        return $this->couponServiceDetails->appliedCouponDetails($total);
+        return $this->couponService->appliedCouponDetails($total);
     }
 
     protected function getCartDiscount($total): array
     {
-        return (new CartDiscountService($this->categoryRepository))->apply($total, $this->getBooks());
+        return $this->cartDiscountService->apply($total, $this->getBooks());
     }
 
     protected function isCouponApplied(): bool
