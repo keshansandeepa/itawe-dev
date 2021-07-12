@@ -10,7 +10,6 @@ class ChildrenBookPromotion implements PromotionInterface
     private Money $total;
     private string $discountName = '10% discount When you purchase 5 children books';
 
-
     public function __construct(Money $total, $books)
     {
         $this->total = $total;
@@ -32,7 +31,6 @@ class ChildrenBookPromotion implements PromotionInterface
         $totalAmount = $this->total->amount();
 
         if (! $this->checkPromotionCanApply($filterBooks) || -1 == gmp_sign($totalAmount) || 0 == gmp_sign($totalAmount)) {
-
             return new PromotionalDetails(
                 new Money(0),
                 false,
@@ -62,7 +60,6 @@ class ChildrenBookPromotion implements PromotionInterface
                 $this->discountName,
                 new Money(0)
             );
-
         }
 
         return new PromotionalDetails(
@@ -71,8 +68,6 @@ class ChildrenBookPromotion implements PromotionInterface
             $this->discountName,
             $remainingTotal
         );
-
-
     }
 
     private function checkPromotionCanApply($filterBooks): bool

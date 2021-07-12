@@ -14,7 +14,6 @@ class CategoryBookPromotion implements PromotionInterface
     private CategoryRepository $categoryRepository;
     private string $discountName = 'Buy 10 books and get 5 % from store for each category';
 
-
     public function __construct(Money $total, $books, CategoryRepository $categoryRepository)
     {
         $this->total = $total;
@@ -51,7 +50,6 @@ class CategoryBookPromotion implements PromotionInterface
                 $this->discountName,
                 new Money(0)
             );
-
         }
 
         return new PromotionalDetails(
@@ -60,7 +58,6 @@ class CategoryBookPromotion implements PromotionInterface
             $this->discountName,
             $remainingTotalPrice
         );
-
     }
 
     /**

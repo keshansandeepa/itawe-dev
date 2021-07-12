@@ -16,45 +16,30 @@ class PromotionalDetails
         bool $isDiscountApplied,
         string $discountName,
         Money $remainingPrice
-    )
-    {
+    ) {
         $this->appliedAmount = $appliedAmount;
         $this->isDiscountApplied = $isDiscountApplied;
         $this->discountName = $discountName;
         $this->remainingPrice = $remainingPrice;
     }
 
-    /**
-     * @return Money
-     */
     public function getAppliedAmount(): Money
     {
         return $this->appliedAmount;
     }
 
-    /**
-     * @return string
-     */
     public function getDiscountName(): string
     {
         return $this->discountName;
     }
 
-    /**
-     * @return Money
-     */
     public function getRemainingPrice(): Money
     {
         return $this->remainingPrice;
     }
 
-    /**
-     * @return bool
-     */
     public function isDiscountApplied(): bool
     {
         return $this->isDiscountApplied;
     }
-
-
 }
