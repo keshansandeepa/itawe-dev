@@ -98,11 +98,11 @@ class CartService implements CartInterface
 
     public function getCartDiscountTotal(): Money
     {
-        if ($this->isUserCartEmpty) {
+        if ($this->isUserCartEmpty || $this->isCouponApplied()) {
             return new Money(0);
         }
 
-        return $this->getCartDiscount(($this->getBooksTotal()))['appliedDiscountTotal'];
+        return $this->getCartDiscount(($this->getBooksTotal()))->getAppliedTotal();
     }
 
     public function getCouponDetails(): CartCouponDetails
@@ -124,7 +124,7 @@ class CartService implements CartInterface
             return $this->calculateCartCouponDetails($total)->getRemainingTotal();
         }
 
-        return $this->getCartDiscount($total)['remainingTotal'];
+        return $this->getCartDiscount($total)->getRemainingTotal();
     }
 
     protected function calculateCartCouponDetails($total): CartCouponDetails
@@ -132,7 +132,7 @@ class CartService implements CartInterface
         return $this->couponService->appliedCouponDetails($total);
     }
 
-    protected function getCartDiscount($total): array
+    protected function getCartDiscount($total)
     {
         return $this->cartDiscountService->apply($total, $this->getBooks());
     }

@@ -16,15 +16,14 @@ class CartDiscountService
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function apply(Money $total, $cartPayload): array
+    public function apply(Money $total, $cartPayload): CartDiscountServiceDetails
     {
         $childrenBookPromotion = (new ChildrenBookPromotion($total, $cartPayload))->apply();
+        $categoryPromotion = (new CategoryBookPromotion($childrenBookPromotion->getRemainingPrice(), $cartPayload, $this->categoryRepository))->apply();
 
-        $categoryPromotion = (new CategoryBookPromotion($childrenBookPromotion['remainingPrice'], $cartPayload, $this->categoryRepository))->apply();
-
-        return [
-            'remainingTotal' => $categoryPromotion->getRemainingPrice(),
-            'appliedDiscountTotal' => $childrenBookPromotion->getAppliedAmount()->add($categoryPromotion->getAppliedAmount()),
-        ];
+        return new CartDiscountServiceDetails(
+            $categoryPromotion->getRemainingPrice(),
+            $childrenBookPromotion->getAppliedAmount()->add($categoryPromotion->getAppliedAmount())
+        );
     }
 }
