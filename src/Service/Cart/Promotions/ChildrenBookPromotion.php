@@ -8,6 +8,7 @@ class ChildrenBookPromotion implements PromotionInterface
 {
     private $books;
     private Money $total;
+    private string $discountName = '10% discount When you purchase 5 children books';
 
     public function __construct(Money $total, $books)
     {
@@ -18,30 +19,30 @@ class ChildrenBookPromotion implements PromotionInterface
     /**
      * @todo Refactor
      */
-    public function apply(): array
+    public function apply(): PromotionalDetails
     {
         $filterBooks = $this->getChildrenBookCollections();
 
         return $this->promotionAppliedAmount($filterBooks);
     }
 
-    private function promotionAppliedAmount($filterBooks)
+    private function promotionAppliedAmount($filterBooks): PromotionalDetails
     {
         $totalAmount = $this->total->amount();
 
         if (! $this->checkPromotionCanApply($filterBooks) || -1 == gmp_sign($totalAmount) || 0 == gmp_sign($totalAmount)) {
-            return [
-                'appliedAmount' => new Money(0),
-                'isDiscountApplied' => false,
-                'discountName' => '10% discount When you purchase 5 children books',
-                'remainingPrice' => $this->total,
-            ];
+            return new PromotionalDetails(
+                new Money(0),
+                false,
+                $this->discountName,
+                $this->total
+            );
         }
 
         return $this->appliedAmount($filterBooks);
     }
 
-    private function appliedAmount($filterBooks): array
+    private function appliedAmount($filterBooks): PromotionalDetails
     {
         $books_total_price = new Money(0);
         $filterBooks->map(function ($book) use (&$books_total_price) {
@@ -53,20 +54,20 @@ class ChildrenBookPromotion implements PromotionInterface
         $remainingTotal = $this->total->subtract($appliedAmount);
 
         if (0 == gmp_sign($remainingTotal->amount()) || -1 == gmp_sign($remainingTotal->amount())) {
-            return [
-                'appliedAmount' => $appliedAmount,
-                'isDiscountApplied' => true,
-                'discountName' => '10% discount When you purchase 5 children books',
-                'remainingPrice' => new Money(0),
-            ];
+            return new PromotionalDetails(
+                $appliedAmount,
+                true,
+                $this->discountName,
+                new Money(0)
+            );
         }
 
-        return [
-            'appliedAmount' => $appliedAmount,
-            'isDiscountApplied' => true,
-            'discountName' => '10% discount When you purchase 5 children books',
-            'remainingPrice' => $remainingTotal,
-        ];
+        return new PromotionalDetails(
+            $appliedAmount,
+            true,
+            $this->discountName,
+            $remainingTotal
+        );
     }
 
     private function checkPromotionCanApply($filterBooks): bool
@@ -77,7 +78,7 @@ class ChildrenBookPromotion implements PromotionInterface
             return $totalQuantity += $book->getQuantity();
         });
 
-        if ($totalQuantity >= 10) {
+        if ($totalQuantity >= 5) {
             return true;
         }
 

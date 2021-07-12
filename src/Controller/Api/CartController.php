@@ -23,19 +23,22 @@ class CartController extends AbstractController
     private CartService $cartService;
     private BookCartRepository $bookCartRepository;
     private CartManager $cartManager;
+    private CouponService $couponService;
 
     public function __construct(
         SerializerInterface $serializer,
         BookCartManager $bookCartManager,
         CartService $cartService,
         BookCartRepository $bookCartRepository,
-        CartManager $cartManager
+        CartManager $cartManager,
+        CouponService $couponService
     ) {
         $this->serializer = $serializer;
         $this->bookCartManager = $bookCartManager;
         $this->cartService = $cartService;
         $this->bookCartRepository = $bookCartRepository;
         $this->cartManager = $cartManager;
+        $this->couponService = $couponService;
     }
 
     /**
@@ -44,15 +47,15 @@ class CartController extends AbstractController
     public function index(): Response
     {
         $data = [
-            'books' => $this->cartService->books(),
+            'books' => $this->cartService->getBooks(),
             'meta' => [
                 'empty' => $this->cartService->isEmpty(),
-                'itemsTotalPrice' => $this->cartService->booksTotal()->formatted(),
+                'itemsTotalPrice' => $this->cartService->getBooksTotal()->formatted(),
                 'discountTotal' => $this->cartService->getCartDiscountTotal()->formatted(),
-                'couponCode' => $this->cartService->getCouponDetails()['couponCode'],
-                'appliedCouponTotal' => $this->cartService->getCouponDetails()['appliedAmount']->formatted(),
-                'subtotal' => $this->cartService->subTotal()->formatted(),
-                'totalPrice' => $this->cartService->total()->formatted(),
+                'couponCode' => $this->cartService->getCouponDetails()->getCouponCode(),
+                'appliedCouponTotal' => $this->cartService->getCouponDetails()->getAppliedAmount()->formatted(),
+                'subtotal' => $this->cartService->getSubTotal()->formatted(),
+                'totalPrice' => $this->cartService->getTotal()->formatted(),
             ],
         ];
 
@@ -138,13 +141,13 @@ class CartController extends AbstractController
     /**
      * @Route ("/api/carts/book/{id}", methods={"DELETE"})
      */
-    public function delete(Request $request, Book $book, CartManager $cartManager): Response
+    public function delete(Request $request, Book $book): Response
     {
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
             $bookCart = $this->bookCartRepository->findBookCart($book, $this->getUser()->getCart());
-            $cartManager->deleteBook($this->getUser()->getCart(), $bookCart);
+            $this->cartManager->deleteBook($this->getUser()->getCart(), $bookCart);
             $this->getDoctrine()->getConnection()->commit();
 
             return new Response(
@@ -166,12 +169,12 @@ class CartController extends AbstractController
     /**
      * @Route ("/api/cart/coupon", methods={"POST"})
      */
-    public function addCoupon(Request $request, CouponService $couponService): Response
+    public function addCoupon(Request $request): Response
     {
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
-            $couponService->redeem($request->toArray()['code'], $this->cartManager);
+            $this->couponService->redeem($request->toArray()['code']);
             $this->getDoctrine()->getConnection()->commit();
 
             return new Response(
@@ -193,12 +196,12 @@ class CartController extends AbstractController
     /**
      * @Route ("/api/cart/coupon/{code}", methods={"DELETE"})
      */
-    public function deleteCoupon(Request $request, $code, CouponService $couponService): Response
+    public function deleteCoupon(Request $request, $code): Response
     {
         $this->getDoctrine()->getConnection()->beginTransaction();
 
         try {
-            $couponService->removeCoupon($code, $this->cartManager);
+            $this->couponService->removeCoupon($code);
             $this->getDoctrine()->getConnection()->commit();
 
             return new Response(
