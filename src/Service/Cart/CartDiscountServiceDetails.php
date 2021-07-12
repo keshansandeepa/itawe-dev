@@ -15,20 +15,13 @@ class CartDiscountServiceDetails
         $this->appliedTotal = $appliedTotal;
     }
 
-    /**
-     * @return Money
-     */
     public function getAppliedTotal(): Money
     {
         return $this->appliedTotal;
     }
 
-    /**
-     * @return Money
-     */
     public function getRemainingTotal(): Money
     {
         return $this->remainingTotal;
     }
-
 }
