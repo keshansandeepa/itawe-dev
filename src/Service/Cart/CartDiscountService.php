@@ -23,8 +23,8 @@ class CartDiscountService
         $categoryPromotion = (new CategoryBookPromotion($childrenBookPromotion['remainingPrice'], $cartPayload, $this->categoryRepository))->apply();
 
         return [
-            'remainingTotal' => $categoryPromotion['remainingPrice'],
-            'appliedDiscountTotal' => $childrenBookPromotion['appliedAmount']->add($categoryPromotion['appliedAmount']),
+            'remainingTotal' => $categoryPromotion->getRemainingPrice(),
+            'appliedDiscountTotal' => $childrenBookPromotion->getAppliedAmount()->add($categoryPromotion->getAppliedAmount()),
         ];
     }
 }

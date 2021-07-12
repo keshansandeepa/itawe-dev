@@ -12,6 +12,8 @@ class CategoryBookPromotion implements PromotionInterface
     private $books;
     private Money $total;
     private CategoryRepository $categoryRepository;
+    private string $discountName = 'Buy 10 books and get 5 % from store for each category';
+
 
     public function __construct(Money $total, $books, CategoryRepository $categoryRepository)
     {
@@ -25,15 +27,15 @@ class CategoryBookPromotion implements PromotionInterface
         return $this->promotionAppliedAmount();
     }
 
-    private function promotionAppliedAmount(): array
+    private function promotionAppliedAmount(): PromotionalDetails
     {
         if (! $this->checkPromotionCanApply()) {
-            return [
-                'appliedAmount' => new Money(0),
-                'isDiscountApplied' => false,
-                'discountName' => 'Buy 10 books and get 5 % from store for each category ',
-                'remainingPrice' => $this->total,
-            ];
+            return new PromotionalDetails(
+                new Money(0),
+                false,
+                $this->discountName,
+                $this->total
+            );
         }
 
         $totalPrice = new Money($this->total->amount());
@@ -43,20 +45,22 @@ class CategoryBookPromotion implements PromotionInterface
         $remainingTotalPrice = $totalPrice->subtract($appliedAmount);
 
         if (-1 == gmp_sign($remainingTotalPrice->amount()) || 0 == gmp_sign($remainingTotalPrice->amount())) {
-            return [
-                'appliedAmount' => $appliedAmount,
-                'isDiscountApplied' => true,
-                'discountName' => 'Buy 10 books and get 5 % from store for each category ',
-                'remainingPrice' => new Money(0),
-            ];
+            return new PromotionalDetails(
+                $appliedAmount,
+                true,
+                $this->discountName,
+                new Money(0)
+            );
+
         }
 
-        return [
-            'appliedAmount' => $appliedAmount,
-            'isDiscountApplied' => true,
-            'discountName' => 'Buy 10 books and get 5 % from store for each category ',
-            'remainingPrice' => $remainingTotalPrice,
-        ];
+        return new PromotionalDetails(
+            $appliedAmount,
+            true,
+            $this->discountName,
+            $remainingTotalPrice
+        );
+
     }
 
     /**
