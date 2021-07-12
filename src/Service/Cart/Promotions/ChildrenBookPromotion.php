@@ -29,7 +29,6 @@ class ChildrenBookPromotion implements PromotionInterface
     private function promotionAppliedAmount($filterBooks): PromotionalDetails
     {
         $totalAmount = $this->total->amount();
-        
 
         if (! $this->checkPromotionCanApply($filterBooks) || -1 == gmp_sign($totalAmount) || 0 == gmp_sign($totalAmount)) {
             return new PromotionalDetails(
@@ -79,9 +78,7 @@ class ChildrenBookPromotion implements PromotionInterface
             return $totalQuantity += $book->getQuantity();
         });
 
-        
         if ($totalQuantity >= 5) {
-
             return true;
         }
 
@@ -90,7 +87,6 @@ class ChildrenBookPromotion implements PromotionInterface
 
     private function getChildrenBookCollections()
     {
-
         return $this->books->filter(function ($bookCart) {
             return 'children' == $bookCart->getBook()->getCategory()->getSlug();
         });

@@ -19,6 +19,7 @@ class CartDiscountService
     public function apply(Money $total, $cartPayload): CartDiscountServiceDetails
     {
         $childrenBookPromotion = (new ChildrenBookPromotion($total, $cartPayload))->apply();
+
         $categoryPromotion = (new CategoryBookPromotion($childrenBookPromotion->getRemainingPrice(), $cartPayload, $this->categoryRepository))->apply();
 
         return new CartDiscountServiceDetails(
